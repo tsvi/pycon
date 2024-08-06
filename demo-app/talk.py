@@ -20,7 +20,7 @@ def generate_report(data: list[dict]):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("filename", type=Path, required=True)
+    parser.add_argument("filename", type=Path)
     args = parser.parse_args()
     data = get_data(args.filename)
     generate_report(data)
