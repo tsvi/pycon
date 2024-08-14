@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@marp-team/marp-cli": "^3.4.0"
+  },
+  "scripts": {
+    "marp:serve": "PORT=8080 marp -s .",
+    "marp:export": "marp slides.md"
+  }
+}
