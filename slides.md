@@ -110,6 +110,9 @@ Example of registering / loading a Jinja filter
 
 ```python
 from importlib import util
+from inspect import getmembers, isfunction
+
+import jinja2
 
 def get_filters(filter_file: Path) -> dict[str, Callable[..., Any]]:
     """Function that returns a dictionary of dynamically loaded filters."""
