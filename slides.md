@@ -14,13 +14,26 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 * A user asks for their specific-use case ...
 * Another user asks for their specific-use case ...
 * A third user asks for their specific-use case ...
-* You realize that slowly your app is becoming a kitchensink
+* You realize that slowly your app is becoming a 
+
+---
+
+![bg width:95%](assets/one-more-thing.png)
 
 ---
 
 <!-- 2 min - Who am I, what I do, a bit about Intel -->
 
 # Bio
+
+* Tsvi Mostovicz, Pre-Sil Validation (aka Verification/DV) Engineer @ Intel
+* Previously @ RAD / AMD / Marvell
+* Live in Meitar, Israel
+* Maintainer of Home Assistant Jewish calendar integration
+
+![bg right vertical height:120px](assets/intel.png)
+![bg height:120px](assets/home-assistant.png)
+![bg height:120px](assets/jewish-calendar.png)
 
 ---
 
@@ -41,11 +54,8 @@ Show the graph step by step.
 - Step 3: Output
 - Step 4: Highlight the arrow going from the tool to the output
 - Step 5: Highlight the data block
--->
 
-# A Real-Life Example
-
-```mermaid
+mermaid
 flowchart LR
     step1[CodeGen Tool]
 
@@ -55,12 +65,17 @@ flowchart LR
 
     step3[Generated Code]
 
-    step2a --> step1
-    step2b --> step1
-    step2c --> step1
+    step2a --/> step1
+    step2b --/> step1
+    step2c --/> step1
 
-    step1 --> step3
-```
+    step1 --/> step3
+-->
+
+# A Real-Life Example
+
+[![](https://mermaid.ink/img/pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO?type=png)](https://mermaid.live/edit#pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO)
+
 ---
 
 <!-- 
@@ -76,11 +91,11 @@ Explain what plugins need to be supported.
         - When trying to parse a data source we need to know that a parser is available
 -->
 
-# Supporting plugins
+# Supporting plugins - what is needed?
 
 * Discovery
-    - Automatic
-    - Manual (provided by configuration)
+    - Automatic (based on predefined scheme (naming/packaging))
+    - Manual (provided by app configuration)
 * Loading and Registration
 
 ---
@@ -91,7 +106,7 @@ Example of registering / loading a Jinja filter
 
 -->
 
-# A simple dynamic import
+# Example - A simple dynamic import
 
 ```python
 from importlib import util
@@ -129,7 +144,7 @@ def setup_template_env(template_dir: Path, filter_file: Path):
 
 -->
 
-# Adding a Jinja filter
+# Using the mechanism: adding a Jinja filter
 
 ```python
 __filters__ = ["respond_to"]
@@ -157,8 +172,7 @@ Entry points have multiple usages:
  - Plugins
 -->
 
-
-# Supporting new data-sources using entry points
+# Example: Supporting new data-sources using entry points
 
 ```python
 import sys
@@ -170,7 +184,7 @@ def get_parser(data_file: Path) -> Callable:
     parser = BUILTIN_PARSER.get(data_file.suffix)
     if parser:
         return parser
-    parser_ep = discovered_parsers.get(name=data_file.suffix) 
+    parser_ep = discovered_parsers.get(data_file.suffix) 
     if parser_ep:
         return parser_ep.load()
 
@@ -179,15 +193,15 @@ def parse_data(data_file: Path) -> dict[str, Any]:
     parse(data_file)
 ```
 
-Other ways exist to create these types of plugins. [See here][other-ways]
+Other ways exist to create these types of plugins. [See here](https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/)
 
 ---
 
-# Adding a data parser
+# Using the mechanism: Adding a data parser
 
 ```toml
 [project.entry-points.'codegen.parsers']
-yaml_parser = "codegen.parsers:parse_yaml"
+yaml = "codegen.parsers:parse_yaml"
 ```
 
 ```python
@@ -215,8 +229,6 @@ def parse_yaml(path: Path) -> dict[str, Any]:
 
 ---
 
-# Footnotes
+# Thank you
 
-Links to resources:
-
-- [other-ways]: https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/
+Tsvi Mostovicz - https://linkedin.com/in/tsvim
