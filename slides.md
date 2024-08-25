@@ -1,14 +1,46 @@
+---
+
+style: |
+    pre ol {
+        all: unset;
+        display: block;
+        counter-reset: line-number 0;
+    }
+    pre ol li {
+        all: unset;
+        display: list-item;
+        list-style: none;
+    }
+    pre ol li::before {
+        content: counter(line-number) "  ";
+        counter-increment: line-number;
+    }
+
+---
+
 # Designing a plugin architecture in Python
 
 Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 ---
 
+<!-- 2 min - Who am I, what I do, a bit about Intel -->
+
+# Bio
+
+* Tsvi Mostovicz - Meitar, Israel
+* Maintainer of Home Assistant Jewish calendar integration
+* Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
+
+![bg right vertical height:120px](assets/intel.png)
+![bg height:120px](assets/home-assistant.png)
+![bg height:120px](assets/jewish-calendar.png)
+
+---
+
 <!-- 2 min - A story describing what a plugin architecture solves -->
 
 ## Intro
-
-<!-- TODO: Add images -->
 
 * You write a Python app supporting a variety of options
 * A user asks for their specific-use case ...
@@ -19,21 +51,6 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 ---
 
 ![bg width:95%](assets/one-more-thing.png)
-
----
-
-<!-- 2 min - Who am I, what I do, a bit about Intel -->
-
-# Bio
-
-* Tsvi Mostovicz, Pre-Sil Validation (aka Verification/DV) Engineer @ Intel
-* Previously @ RAD / AMD / Marvell
-* Live in Meitar, Israel
-* Maintainer of Home Assistant Jewish calendar integration
-
-![bg right vertical height:120px](assets/intel.png)
-![bg height:120px](assets/home-assistant.png)
-![bg height:120px](assets/jewish-calendar.png)
 
 ---
 
@@ -100,54 +117,45 @@ Explain what plugins need to be supported.
 
 ---
 
-<!-- 3 min
+# A few words about Jinja
 
-Example of registering / loading a Jinja filter
+* Jinja is a templating engine built on Python
+* It allows the user to build complex templates based on pieces of data
+* Widely used by open-source projects (Django, Ansible, HomeAssistant)
 
--->
+Example template:
+```jinja
+{% set name = "Tsvi" %}
 
-# Example - A simple dynamic import
-
-```python
-from importlib import util
-from inspect import getmembers, isfunction
-
-import jinja2
-
-def get_filters(filter_file: Path) -> dict[str, Callable[..., Any]]:
-    """Function that returns a dictionary of dynamically loaded filters."""
-    spec = util.spec_from_file_location(filter_file.stem, filter_file)
-    if not spec:
-        sys.exit(-1)
-    if not spec.loader:
-        sys.exit(-1)
-    filter_module = util.module_from_spec(spec)
-    spec.loader.exec_module(filter_module)
-    members: dict[str, Callable[..., Any]] = dict(getmembers(filter_module, isfunction))
-    if "__filters__" in dir(filter_module):
-        members = {
-            name: func
-            for name, func in members.items()
-            if name in filter_module.__filters__
-        }
-    return members
-
-def setup_template_env(template_dir: Path, filter_file: Path):
-    template_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
-    template_env.filters.update(BUILTIN_FILTERS)
-    template_env.filters.update(get_filters(filter_file))
+Hello {{ name }}!
 ```
 
---- 
+```text
+Hello Tsvi!
+```
+
+---
+
+# Jinja filters
+
+* Filters are python methods that can be used in the template as follows:
+
+```jinja
+{{ name | upper }} {# Will pass the name variable to the greet filter and print the result #}
+```
+
+```text
+TSVI
+```
+---
+
+# Coding time: adding a Jinja filter
 
 <!--
-
 - Explain why we need the dunder variable (allow for testing)
 - DO NOT DISCUSS 3rd-party unless asked about
-
 -->
 
-# Using the mechanism: adding a Jinja filter
 
 ```python
 __filters__ = ["respond_to"]
@@ -167,6 +175,52 @@ if __name__ == "__main__":
 
 ---
 
+# How can we import this dynamically?
+
+```python
+from importlib import util
+from inspect import getmembers, isfunction
+
+import jinja2
+
+def get_filters(filter_file: Path) -> dict[str, Callable[..., Any]]:
+    """Function that returns a dictionary of dynamically loaded filters."""
+    spec = util.spec_from_file_location(filter_file.stem, filter_file)
+    filter_module = util.module_from_spec(spec)
+    spec.loader.exec_module(filter_module)
+    members: dict[str, Callable[..., Any]] = dict(getmembers(filter_module, isfunction))
+    if "__filters__" in dir(filter_module):
+        members = {
+            name: func
+            for name, func in members.items()
+            if name in filter_module.__filters__
+        }
+    return members
+
+def setup_template_env(template_dir: Path, filter_file: Path):
+    template_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    template_env.filters.update(BUILTIN_FILTERS)
+    template_env.filters.update(get_filters(filter_file))
+```
+
+--- 
+
+# Using the mechanism: Adding a data parser
+
+```toml
+[project.entry-points.codegen-parsers]
+yaml = "parsers:parse_yaml"
+```
+
+```python
+import yaml
+
+def parse_yaml(path: Path) -> dict[str, Any]:
+    return yaml.safe_load(path.read_text())
+```
+
+---
+
 <!--
 Entry points - 4 min
 
@@ -181,10 +235,12 @@ Entry points have multiple usages:
 import sys
 from importlib.metadata import entry_points
 
-discovered_parsers = entry_points(group='codegen.parsers')
+from parsers import BUILTIN_PARSERS
+
+discovered_parsers = entry_points(group='codegen-parsers')
     
 def get_parser(data_file: Path) -> Callable:
-    parser = BUILTIN_PARSER.get(data_file.suffix)
+    parser = BUILTIN_PARSERS.get(data_file.suffix)
     if parser:
         return parser
     parser_ep = discovered_parsers.get(data_file.suffix) 
@@ -197,22 +253,6 @@ def parse_data(data_file: Path) -> dict[str, Any]:
 ```
 
 Other ways exist to create these types of plugins. [See here](https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/)
-
----
-
-# Using the mechanism: Adding a data parser
-
-```toml
-[project.entry-points.'codegen.parsers']
-yaml = "codegen.parsers:parse_yaml"
-```
-
-```python
-import yaml
-
-def parse_yaml(path: Path) -> dict[str, Any]:
-    return yaml.safe_load(path.read_text())
-```
 
 ---
 
