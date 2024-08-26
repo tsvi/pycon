@@ -1,9 +1,10 @@
 {
   "devDependencies": {
-    "@marp-team/marp-cli": "^3.4.0"
+    "@marp-team/marp-cli": "^3.4.0",
+    "markdown-it-highlight-lines": "^1.0.2"
   },
   "scripts": {
-    "marp:serve": "PORT=8080 marp -s . --engine ./engine.js --allow-local-files",
+    "marp:serve": "PORT=8080 marp -s . --engine ./engine.js --html --allow-local-files",
     "marp:export": "marp slides.md"
   }
 }

@@ -15,6 +15,17 @@ style: |
         content: counter(line-number) "  ";
         counter-increment: line-number;
     }
+    .columns {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+    .highlighted-line {
+        background-color: #ff0;
+        display: block;
+        margin: 0 -1.575rem;
+        padding: 0 1.575rem;
+    }
 
 ---
 
@@ -28,13 +39,24 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 # Bio
 
+<div class="columns">
+    <div>
+
 * Tsvi Mostovicz - Meitar, Israel
 * Maintainer of Home Assistant Jewish calendar integration
 * Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
 
-![bg right vertical height:120px](assets/intel.png)
-![bg height:120px](assets/home-assistant.png)
-![bg height:120px](assets/jewish-calendar.png)
+    </div>
+    <div>
+    <div data-marpit-fragment>
+
+![left height:120px](assets/home-assistant.png) ![height:120px](assets/jewish-calendar.png)
+    </div>
+    <div data-marpit-fragment>
+![height:120px](assets/intel.png)
+    </div>
+    </div>
+</div>
 
 ---
 
@@ -91,7 +113,9 @@ flowchart LR
 
 # A Real-Life Example
 
-[![](https://mermaid.ink/img/pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO?type=png)](https://mermaid.live/edit#pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO)
+<div align="center">
+[(https://mermaid.ink/img/pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO?type=png)](https://mermaid.live/edit#pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO)
+</div>
 
 ---
 
@@ -177,7 +201,7 @@ if __name__ == "__main__":
 
 # How can we import this dynamically?
 
-```python
+```python {1,8,10-15}
 from importlib import util
 from inspect import getmembers, isfunction
 

@@ -1,6 +1,10 @@
 // engine.js
+
+const { Marp } = require('@marp-team/marp-core')
+const highlightLines = require('markdown-it-highlight-lines')
+
 module.exports = ({ marp }) =>
-    marp.use(({ marpit }) => {
+    marp.use(highlightLines,({ marpit }) => {
       const { highlighter } = marpit
   
       marpit.highlighter = function (...args) {
