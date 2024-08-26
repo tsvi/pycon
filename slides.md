@@ -148,7 +148,7 @@ Explain what plugins need to be supported.
 * Widely used by open-source projects (Django, Ansible, HomeAssistant)
 
 Example template:
-```jinja
+```jinja2
 {% set name = "Tsvi" %}
 
 Hello {{ name }}!
@@ -164,7 +164,7 @@ Hello Tsvi!
 
 * Filters are python methods that can be used in the template as follows:
 
-```jinja
+```jinja2
 {{ name | upper }} {# Will pass the name variable to the greet filter and print the result #}
 ```
 
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     print(respond_to("test", "foo"))
 ```
 
-```jinja
+```jinja2
 {{ "Jack" | respond_to("John") }}
 ```
 
