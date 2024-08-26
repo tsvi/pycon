@@ -298,4 +298,24 @@ Other ways exist to create these types of plugins. [See here](https://packaging.
 
 # Thank you
 
-Tsvi Mostovicz - https://linkedin.com/in/tsvim
+<div style="display: flex; align-items: center; justify-content: center;">
+
+<div style="text-align: center; margin-right: 20px; margin-top: 75px;">
+<img src="assets/linkedin-qr.png" style="height: 150px; border: 2px solid #0077b5; border-radius: 10px;">
+<br><b>LinkedIn:</b> <a href="https://linkedin.com/in/tsvim">linkedin.com/in/tsvim</a>
+</div>
+
+<div style="text-align: center; margin-left: 20px; margin-top: 75px;">
+<img src="assets/github-qr.png" style="height: 150px; border: 2px solid #333; border-radius: 10px;">
+<br><b>GitHub:</b> <a href="https://github.com/tsvi">github.com/tsvi</a>
+</div>
+
+</div>
+
+---
+
+# Resources
+
+- Jinja - https://jinja.palletsprojects.com/
+- Plugin packaging - https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/
+- Entry Points - https://setuptools.pypa.io/en/latest/userguide/entry_point.html
