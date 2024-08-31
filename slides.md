@@ -295,3 +295,10 @@ Other ways exist to create these types of plugins. [See here](https://packaging.
 - Jinja - https://jinja.palletsprojects.com/
 - Plugin packaging - https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/
 - Entry Points - https://setuptools.pypa.io/en/latest/userguide/entry_point.html
+- Other ways of implementing:
+    - [Youtube - ArjanCodes - Why the Plugin Architecture Gives You CRAZY Flexibility](https://www.youtube.com/watch?v=iCE1bDoit9Q)
+    - Rodney Ragan - How I wrote a Python app that can be extended with plugins - [Part 1][art-part-1] / [Part 2][art-part-2] / [Part 3][art-part-3]
+
+[art-part-1]: https://medium.com/@rodney_ragan/how-i-wrote-a-python-app-that-can-be-extended-with-plugins-part-1-2ddfd4ec5258
+[art-part-2]: https://medium.com/@rodney_ragan/how-i-wrote-a-python-app-that-can-be-extended-with-plugins-part-2-4f91c1f27022
+[art-part-3]: https://medium.com/@rodney_ragan/how-i-wrote-a-python-app-that-can-be-extended-with-plugins-part-3-eab895d35204
