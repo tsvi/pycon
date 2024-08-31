@@ -1,7 +1,6 @@
 {
   "devDependencies": {
-    "@marp-team/marp-cli": "^3.4.0",
-    "prismjs": "^1.29.0"
+    "@marp-team/marp-cli": "^3.4.0"
   },
   "scripts": {
     "marp:serve": "PORT=8080 marp -s . --engine ./engine.js --html --allow-local-files",

@@ -1,7 +1,7 @@
 ---
 
 marp: true
-theme: prism-solarizedlight
+theme: pycon-talk-theme
 
 ---
 
@@ -124,7 +124,7 @@ Explain what plugins need to be supported.
 * Widely used by open-source projects (Django, Ansible, HomeAssistant)
 
 Example template:
-```jinja2
+```jinja
 {% set name = "Tsvi" %}
 
 Hello {{ name }}!
@@ -140,7 +140,7 @@ Hello Tsvi!
 
 * Filters are python methods that can be used in the template as follows:
 
-```jinja2
+```jinja
 {{ name | upper }} {# Will pass the name variable to the greet filter and print the result #}
 ```
 
@@ -169,7 +169,7 @@ if __name__ == "__main__":
     print(respond_to("test", "foo"))
 ```
 
-```jinja2
+```jinja
 {{ "Jack" | respond_to("John") }}
 ```
 
