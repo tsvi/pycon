@@ -15,23 +15,45 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 # Bio
 
-<div class="columns">
-    <div>
+---
 
-* Tsvi Mostovicz - Meitar, Israel
-* Maintainer of Home Assistant Jewish calendar integration
-* Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<div data-marpit-fragment="1">
 
-    </div>
-    <div>
-    <div data-marpit-fragment>
+![height:250px](assets/belgium-flag.svg)
+</div>
+<div data-marpit-fragment="2">
 
-![left height:120px](assets/home-assistant.png) ![height:120px](assets/jewish-calendar.png)
-    </div>
-    <div data-marpit-fragment>
-![height:120px](assets/intel.png)
-    </div>
-    </div>
+![height:250px](assets/israel-flag.png)
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<div data-marpit-fragment="3">
+
+![height:250px](assets/psion5.jpg) ![height:250px](assets/opl-docs.png)
+</div>
+<div data-marpit-fragment="4">
+
+![height:250px](assets/electronics.jpg)
+</div>
+</div>
+
+---
+
+- Maintainer of Home Assistant Jewish calendar integration
+  <span style="display: flex; align-items: center; justify-content: flex-start">
+ ![height:120px margin-right:10px](assets/home-assistant.png)
+ ![height:120px](assets/jewish-calendar.png)
+ </span>
+</div>
+
+<div data-marpit-fragment="4">
+
+- Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
+  <span style="display: inline-block; vertical-align: middle;">
+  ![height:120px margin-left:l-10px](assets/intel.png)
+  </span>
 </div>
 
 ---
