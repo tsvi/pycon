@@ -1,31 +1,7 @@
 ---
 
-style: |
-    pre ol {
-        all: unset;
-        display: block;
-        counter-reset: line-number 0;
-    }
-    pre ol li {
-        all: unset;
-        display: list-item;
-        list-style: none;
-    }
-    pre ol li::before {
-        content: counter(line-number) "  ";
-        counter-increment: line-number;
-    }
-    .columns {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
-    }
-    .highlighted-line {
-        background-color: #ff0;
-        display: block;
-        margin: 0 -1.575rem;
-        padding: 0 1.575rem;
-    }
+marp: true
+theme: prism-solarizedlight
 
 ---
 
@@ -181,7 +157,7 @@ TSVI
 -->
 
 
-```python
+```python {5-6}
 __filters__ = ["respond_to"]
 
 
@@ -201,7 +177,7 @@ if __name__ == "__main__":
 
 # How can we import this dynamically?
 
-```python {1,8,10-15}
+```python
 from importlib import util
 from inspect import getmembers, isfunction
 

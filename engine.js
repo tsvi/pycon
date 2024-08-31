@@ -1,21 +1,42 @@
 // engine.js
 
 const { Marp } = require('@marp-team/marp-core')
-const highlightLines = require('markdown-it-highlight-lines')
+const Prism = require('prismjs');
 
-module.exports = ({ marp }) =>
-    marp.use(highlightLines,({ marpit }) => {
-      const { highlighter } = marpit
-  
-      marpit.highlighter = function (...args) {
-        const original = highlighter.apply(this, args)
-        const listItems = original
-          .split(/\n(?!$)/) // Don't split at the trailing newline
-          .map(
-            (line) =>
-              `<li><span data-marp-line-number></span><span>${line}</span></li>`
-          )
-  
-        return `<ol>${listItems.join('')}</ol>`
-      }
-    })
+const loadLanguages = require('prismjs/components/');
+
+// Load the plugins you want to use
+require('prismjs/plugins/line-numbers/prism-line-numbers');
+require('prismjs/plugins/line-highlight/prism-line-highlight');
+
+loadLanguages(['python', 'jinja2', 'toml']);
+
+function extractLineHighlight(attrs) {
+  const matched = attrs.toString().match(/{([\d,-]+)}/)
+  const lineNumbers = matched?.[1]
+    .split(',')
+    .map((v) => v.split('-').map((v) => parseInt(v, 10)))  
+  return lineNumbers;
+}
+
+module.exports = (opts) => {
+  const marp = new Marp(opts)
+  marp.highlighter = (code, lang, attrs) => {
+    const highlight = extractLineHighlight(attrs);
+    const languageConfig = Prism.languages[lang] || Prism.languages.plaintext;
+    let highlightedCode = Prism.highlight(code, languageConfig, lang);
+
+    // Add line numbers
+    let preTag = `<pre class="language-${lang} line-numbers"`;
+
+    // Add line highlight if specified
+    if (highlight) {
+      preTag += ` data-line="${highlight}"`;
+    }
+
+    preTag += `><code>${highlightedCode}</code></pre>`;
+
+    return preTag;
+  }
+  return marp
+}
