@@ -2,6 +2,7 @@
 
 marp: true
 theme: pycon-talk-theme
+title: Designing a plugin architecture in Python
 
 ---
 
