@@ -239,12 +239,12 @@ from inspect import getmembers, isfunction
 
 import jinja2
 
-def get_filters(filter_file: Path) -> dict[str, Callable[..., Any]]:
-    """Function that returns a dictionary of dynamically loaded filters."""
+def get_filters(filter_file: Path) -> dict[str, Callable]:
+    """Return a dictionary of dynamically loaded filters."""
     spec = util.spec_from_file_location(filter_file.stem, filter_file)
     filter_module = util.module_from_spec(spec)
     spec.loader.exec_module(filter_module)
-    members: dict[str, Callable[..., Any]] = dict(getmembers(filter_module, isfunction))
+    members = dict(getmembers(filter_module, isfunction))
     if "__filters__" in dir(filter_module):
         members = {
             name: func
@@ -262,7 +262,7 @@ def setup_template_env(template_dir: Path, filter_file: Path):
 
 # Let's return to our filter implementation
 
-```python title="Filter implementation"
+```python title="Filter implementation" {1}
 __filters__ = ["pascal"]
 
 
