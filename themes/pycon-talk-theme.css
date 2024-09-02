@@ -7,6 +7,11 @@
 
 @import 'rose-pine-dawn';
 
+pre {
+  position: relative;
+  padding-top: 24px; /* Add some top padding to avoid overlap */
+}
+
 pre ol {
   all: unset;
   display: grid;
@@ -27,4 +32,18 @@ pre ol li span[data-marp-line-number]::before {
 
 pre .highlighted-line > * {
   background-color: #ff6;
+}
+
+.code-title {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: #333; /* Dark background */
+  color: #fff; /* White text color */
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10; /* Ensure it appears above other elements */
 }

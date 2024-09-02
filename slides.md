@@ -144,15 +144,15 @@ flowchart LR
 
 <div data-marpit-fragment="1">
 
-```jinja
+```jinja no-line-number title="Jinja code"
 {% set name = "tsvi" %}
- Hello {{ name | upper }}! {# upper is a filter #}
+Hello {{ name | upper }}! {# upper is a filter #}
 ```
 
 </div>
 <div data-marpit-fragment="2">
 
-```text
+```text no-line-number title="Output"
 Hello TSVI!
 ```
 
@@ -200,27 +200,33 @@ Explain what plugins need to be supported.
 -->
 
 
-<div hidden="true">
-
-```python
-__filters__ = ["pascal"]
-
-
-def pascal(text: str) -> str:
-    """Return the given string as a pascal case."""
-    return capwords(text, sep=" ").replace(" ", "")
-```
-</div>
-
 <div data-marpit-fragment="1">
 
-```jinja
+```jinja no-line-number title="Jinja code"
 {{ "variable name" | pascal }}
 ```
 
-```text
+```text no-line-number title="Output"
 VariableName
 ```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+Let's implement our filter:
+
+</div>
+
+
+<div data-marpit-fragment="3">
+
+```python title="Filter implementation"
+def pascal(text: str) -> str:
+    """Return the given string as PascalCase."""
+    return capwords(text, sep=" ").replace(" ", "")
+```
+
 </div>
 
 ---
@@ -253,6 +259,21 @@ def setup_template_env(template_dir: Path, filter_file: Path):
 ```
 
 --- 
+
+# Let's return to our filter implementation
+
+```python title="Filter implementation"
+__filters__ = ["pascal"]
+
+
+def pascal(text: str) -> str:
+    """Return the given string as a pascal case."""
+    return capwords(text, sep=" ").replace(" ", "")
+```
+
+
+---
+
 
 # Using the mechanism: Adding a data parser
 
