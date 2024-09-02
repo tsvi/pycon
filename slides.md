@@ -19,22 +19,22 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 ---
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-<div data-marpit-fragment="1">
+<div>
 
 ![height:250px](assets/belgium-flag.svg)
 </div>
-<div data-marpit-fragment="2">
+<div data-marpit-fragment="1">
 
 ![height:250px](assets/israel-flag.png)
 </div>
 </div>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-<div data-marpit-fragment="3">
+<div data-marpit-fragment="2">
 
 ![height:250px](assets/psion5.jpg) ![height:250px](assets/opl-docs.png)
 </div>
-<div data-marpit-fragment="4">
+<div data-marpit-fragment="3">
 
 ![height:250px](assets/electronics.jpg)
 </div>
@@ -44,22 +44,22 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 - Maintainer of Home Assistant Jewish calendar integration
   <span style="display: flex; align-items: center; justify-content: flex-start">
- ![height:120px margin-right:10px](assets/home-assistant.png)
- ![height:120px](assets/jewish-calendar.png)
+ ![height:150px margin-right:10px](assets/home-assistant.png)
+ ![height:150px](assets/jewish-calendar.png)
  </span>
 </div>
 
-<div data-marpit-fragment="4">
+<div data-marpit-fragment="1">
 
 - Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
   <span style="display: inline-block; vertical-align: middle;">
-  ![height:120px margin-left:l-10px](assets/intel.png)
+  ![height:150px margin-left:l-10px](assets/intel.png)
   </span>
 </div>
 
 ---
 
-<!-- 2 min - A story describing what a plugin architecture solves -->
+<!-- 2 min - A story describing what a plugin architecture solves 
 
 ## Intro
 
@@ -75,6 +75,7 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 ---
 
+-->
 <!-- 3 min
 
 Step-by-step introduce the example tool for our talk using a block diagram.
@@ -112,9 +113,57 @@ flowchart LR
 
 # A Real-Life Example
 
-<div align="center">
-[(https://mermaid.ink/img/pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO?type=png)](https://mermaid.live/edit#pako:eNptUcFOwzAM_ZXI504CdisSFyaQJriwnWh2MInbBhK7yhKhadq_k1E2OkQOVvLes19s78GIJaih9fJpeoxJPb1oVuVsEw3XzX2hH4nVWsRvNP9SN1g4bl2XIyYnrB6cp82Ef2uWjt9RrSkMHtMFZ5oFJryoN2-KDZVaZNXR9I-Zms3uxi9NLf5FzRSd9HKG5yM4Ru_4Y5V2ntSVMuIl1hKRO7qFCgLFgM6W8eyPYg2pp0Aa6nK11GL2SYPmQ5FiTrLasYE6xUwVRMldD3WLflteebClsYXDLmI4Sci6JPF5nP_3GioYkF9Fwk_i4QtqBIhO)
+---
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-1.svg)
+</span>
+
+---
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-2.svg)
+</span>
+
+---
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-3.svg)
+</span>
+
+---
+
+# Jinja templates
+
+* Jinja is a templating engine built on Python
+* Widely used by open-source projects (Django, Ansible, Home Assistant)
+* Filters are python methods that can be used in the template as follows:
+
+<div data-marpit-fragment="1">
+
+```jinja
+{% set name = "tsvi" %}
+ Hello {{ name | upper }}! {# upper is a filter #}
+```
+
 </div>
+<div data-marpit-fragment="2">
+
+```text
+Hello TSVI!
+```
+
+</div>
+
+---
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-4.svg)
+</span>
 
 ---
 
@@ -129,7 +178,6 @@ Explain what plugins need to be supported.
     - In our example:
         - Jinja must be aware of the available filters
         - When trying to parse a data source we need to know that a parser is available
--->
 
 # Supporting plugins - what is needed?
 
@@ -140,67 +188,46 @@ Explain what plugins need to be supported.
 
 ---
 
-# A few words about Jinja
-
-* Jinja is a templating engine built on Python
-* It allows the user to build complex templates based on pieces of data
-* Widely used by open-source projects (Django, Ansible, HomeAssistant)
-
-Example template:
-```jinja
-{% set name = "Tsvi" %}
-
-Hello {{ name }}!
-```
-
-```text
-Hello Tsvi!
-```
-
----
-
-# Jinja filters
-
-* Filters are python methods that can be used in the template as follows:
-
-```jinja
-{{ name | upper }} {# Will pass the name variable to the greet filter and print the result #}
-```
-
-```text
-TSVI
-```
----
+-->
 
 # Coding time: adding a Jinja filter
 
 <!--
 - Explain why we need the dunder variable (allow for testing)
 - DO NOT DISCUSS 3rd-party unless asked about
+- https://capitalizemytitle.com/camel-case/
+- https://learn.microsoft.com/sv-se/archive/blogs/brada/history-around-pascal-casing-and-camel-casing
 -->
 
 
-```python {5-6}
-__filters__ = ["respond_to"]
+<div hidden="true">
+
+```python
+__filters__ = ["pascal"]
 
 
-def respond_to(name, my_name):
-    """Greet and introduce yourself."""
-    return f"Hello to you {name}! My name is {my_name}."
-
-if __name__ == "__main__":
-    print(respond_to("test", "foo"))
+def pascal(text: str) -> str:
+    """Return the given string as a pascal case."""
+    return capwords(text, sep=" ").replace(" ", "")
 ```
+</div>
+
+<div data-marpit-fragment="1">
 
 ```jinja
-{{ "Jack" | respond_to("John") }}
+{{ "variable name" | pascal }}
 ```
+
+```text
+VariableName
+```
+</div>
 
 ---
 
 # How can we import this dynamically?
 
-```python
+```python {20-22}
 from importlib import util
 from inspect import getmembers, isfunction
 
@@ -222,7 +249,6 @@ def get_filters(filter_file: Path) -> dict[str, Callable[..., Any]]:
 
 def setup_template_env(template_dir: Path, filter_file: Path):
     template_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
-    template_env.filters.update(BUILTIN_FILTERS)
     template_env.filters.update(get_filters(filter_file))
 ```
 

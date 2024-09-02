@@ -14,5 +14,6 @@
     "./themes/rose-pine.css",
     "./themes/wave.css",
     "./themes/pycon-talk-theme.css",
-  ]
+  ],
+  "svg.preview.background": "white"
 }
