@@ -7,13 +7,18 @@ module.exports = ({ marp }) =>
       const original = highlighter.call(this, code, lang, attrs)
 
       // Parse code highlight
-      const matched = attrs.toString().match(/{([\d,-]+)}/)
+      const matched = attrs.toString().match(/highlight:([\d,-]+)/)
       const lineNumbers = matched?.[1]
         .split(',')
         .map((v) => v.split('-').map((v) => parseInt(v, 10)))
+      
+      const dimMatch = attrs.toString().match(/dim:([\d,-]+)/);
+      const dimmedLineNumbers = dimMatch?.[1]
+        .split(',')
+        .map((v) => v.split('-').map((v) => parseInt(v, 10)));
 
       // Parse code title
-      const titleMatch = attrs.toString().match(/title="([^"]+)"/);
+      const titleMatch = attrs.toString().match(/title:"([^"]+)"/);
       const title = titleMatch ? titleMatch[1] : '';
 
       // Include title if specified
@@ -31,13 +36,21 @@ module.exports = ({ marp }) =>
 
             const highlighted = lineNumbers?.find(([start, end]) => {
               if (end != null && start <= lineNum && lineNum <= end) return true
-
               return start === lineNum
             })
 
-            return `<li${
-              highlighted ? ' class="highlighted-line"' : ''
-            }><span data-marp-line-number></span><span>${line}</span></li>`
+            const dimmed = dimmedLineNumbers?.find(([start, end]) => {
+              if (end != null && start <= lineNum && lineNum <= end) return true;
+              return start === lineNum;
+            });
+
+            const className = highlighted
+              ? 'highlighted-line'
+              : dimmed
+              ? 'dimmed-line'
+              : '';
+
+            return `<li class="${className}"><span data-marp-line-number></span><span>${line}</span></li>`
           })
 
         return `${titleHTML}<ol>${listItems.join('')}</ol>`

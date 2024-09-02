@@ -144,7 +144,7 @@ flowchart LR
 
 <div data-marpit-fragment="1">
 
-```jinja no-line-number title="Jinja code"
+```jinja no-line-number title:"Jinja code"
 {% set name = "tsvi" %}
 Hello {{ name | upper }}! {# upper is a filter #}
 ```
@@ -152,7 +152,7 @@ Hello {{ name | upper }}! {# upper is a filter #}
 </div>
 <div data-marpit-fragment="2">
 
-```text no-line-number title="Output"
+```text no-line-number title:"Output"
 Hello TSVI!
 ```
 
@@ -202,11 +202,11 @@ Explain what plugins need to be supported.
 
 <div data-marpit-fragment="1">
 
-```jinja no-line-number title="Jinja code"
+```jinja no-line-number title:"Jinja code"
 {{ "variable name" | pascal }}
 ```
 
-```text no-line-number title="Output"
+```text no-line-number title:"Output"
 VariableName
 ```
 
@@ -221,7 +221,7 @@ Let's implement our filter:
 
 <div data-marpit-fragment="3">
 
-```python title="Filter implementation"
+```python title:"Filter implementation"
 def pascal(text: str) -> str:
     """Return the given string as PascalCase."""
     return capwords(text, sep=" ").replace(" ", "")
@@ -231,13 +231,45 @@ def pascal(text: str) -> str:
 
 ---
 
-# How can we import this dynamically?
+# How can we import this dynamically? (Registration)
 
-```python {20-22}
+```python dim:3-6 title:"Registering our filters"
+from jinja2 import Environment, FileSystemLoader
+
+def setup_template_env(template_dir: Path, filter_file: Path):
+    template_env = Environment(loader=FileSystemLoader(template_dir))
+    template_env.filters.update(get_filters(filter_file))
+    return template_env
+
+def render(template_env: Environment, template_file: Path, data: dict):
+    template = template_env.get_template(template_file)
+    return template.render(**data)
+```
+
+---
+
+# How can we import this dynamically? (Registration)
+
+```python highlight:5 dim:8-10 title:"Setup template environment"
+from jinja2 import Environment, FileSystemLoader
+
+def setup_template_env(template_dir: Path, filter_file: Path):
+    template_env = Environment(loader=FileSystemLoader(template_dir))
+    template_env.filters.update(get_filters(filter_file))
+    return template_env
+
+def render(template_env: Environment, template_file: Path, data: dict):
+    template = template_env.get_template(template_file)
+    return template.render(**data)
+```
+
+---
+
+# How can we import this dynamically? (Lookup)
+
+```python title:"Getting the filters" dim:10-14
 from importlib import util
 from inspect import getmembers, isfunction
-
-import jinja2
 
 def get_filters(filter_file: Path) -> dict[str, Callable]:
     """Return a dictionary of dynamically loaded filters."""
@@ -247,22 +279,39 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
     members = dict(getmembers(filter_module, isfunction))
     if "__filters__" in dir(filter_module):
         members = {
-            name: func
-            for name, func in members.items()
+            name: func for name, func in members.items()
             if name in filter_module.__filters__
         }
     return members
-
-def setup_template_env(template_dir: Path, filter_file: Path):
-    template_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
-    template_env.filters.update(get_filters(filter_file))
 ```
 
---- 
+---
+
+# How can we import this dynamically? (Lookup)
+
+```python title:"Filtering the filters 😊" dim:6-9
+from importlib import util
+from inspect import getmembers, isfunction
+
+def get_filters(filter_file: Path) -> dict[str, Callable]:
+    """Return a dictionary of dynamically loaded filters."""
+    spec = util.spec_from_file_location(filter_file.stem, filter_file)
+    filter_module = util.module_from_spec(spec)
+    spec.loader.exec_module(filter_module)
+    members = dict(getmembers(filter_module, isfunction))
+    if "__filters__" in dir(filter_module):
+        members = {
+            name: func for name, func in members.items()
+            if name in filter_module.__filters__
+        }
+    return members
+```
+
+---
 
 # Let's return to our filter implementation
 
-```python title="Filter implementation" {1}
+```python title:"Filter implementation" highlight:1
 __filters__ = ["pascal"]
 
 
@@ -271,23 +320,36 @@ def pascal(text: str) -> str:
     return capwords(text, sep=" ").replace(" ", "")
 ```
 
+---
+
+# Using the entry-point mechanism: Adding a data parser
 
 ---
 
+# Our new data parser
 
-# Using the mechanism: Adding a data parser
+<div data-marpit-fragment="1">
 
-```toml
-[project.entry-points.codegen-parsers]
-yaml = "parsers:parse_yaml"
-```
-
-```python
+```python title:"Parser implementation" no-line-number
+"""parsers.py"""
 import yaml
 
 def parse_yaml(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text())
 ```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+Registration of our parser:
+
+```toml no-line-number title:"pyproject.toml"
+[project.entry-points.codegen-parsers]
+yaml = "parsers:parse_yaml"
+```
+
+</div>
 
 ---
 
@@ -299,10 +361,9 @@ Entry points have multiple usages:
  - Plugins
 -->
 
-# Example: Supporting new data-sources using entry points
+# Parsing a data file
 
-```python
-import sys
+```python title:"Parsing data" dim:1-2,4-6,11-14
 from importlib.metadata import entry_points
 
 from parsers import BUILTIN_PARSERS
@@ -322,7 +383,53 @@ def parse_data(data_file: Path) -> dict[str, Any]:
     parse(data_file)
 ```
 
-Other ways exist to create these types of plugins. [See here](https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/)
+---
+
+# Parsing a data file (Plugin lookup)
+
+```python title:"Parsing data using plugin" dim:2-4,6,8-10,14-17
+from importlib.metadata import entry_points
+
+from parsers import BUILTIN_PARSERS
+
+discovered_parsers = entry_points(group='codegen-parsers')
+    
+def get_parser(data_file: Path) -> Callable:
+    parser = BUILTIN_PARSERS.get(data_file.suffix)
+    if parser:
+        return parser
+    parser_ep = discovered_parsers.get(data_file.suffix) 
+    if parser_ep:
+        return parser_ep.load()
+
+def parse_data(data_file: Path) -> dict[str, Any]:
+    parse = get_parser(data_file)
+    parse(data_file)
+```
+
+---
+
+# Parsing a data file (Plugin lookup)
+
+```python title:"Parsing data full example"
+from importlib.metadata import entry_points
+
+from parsers import BUILTIN_PARSERS
+
+discovered_parsers = entry_points(group='codegen-parsers')
+    
+def get_parser(data_file: Path) -> Callable:
+    parser = BUILTIN_PARSERS.get(data_file.suffix)
+    if parser:
+        return parser
+    parser_ep = discovered_parsers.get(data_file.suffix) 
+    if parser_ep:
+        return parser_ep.load()
+
+def parse_data(data_file: Path) -> dict[str, Any]:
+    parse = get_parser(data_file)
+    parse(data_file)
+```
 
 ---
 

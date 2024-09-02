@@ -30,6 +30,12 @@ pre ol li span[data-marp-line-number]::before {
   text-align: right;
 }
 
+pre .dimmed-line > * {
+  color: #999; /* Grey color for the text */
+  background-color: #f8f8f8; /* Light background */
+  opacity: 0.4; /* Slightly transparent for a dimmed effect */
+}
+
 pre .highlighted-line > * {
   background-color: #ff6;
 }
