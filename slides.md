@@ -16,31 +16,32 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 # Bio
 
----
-
+<!--
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-<div>
+<div data-marpit-fragment="1">
 
 ![height:250px](assets/belgium-flag.svg)
 </div>
-<div data-marpit-fragment="1">
+<div data-marpit-fragment="2">
 
 ![height:250px](assets/israel-flag.png)
 </div>
 </div>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-<div data-marpit-fragment="2">
+<div data-marpit-fragment="3">
 
 ![height:250px](assets/psion5.jpg) ![height:250px](assets/opl-docs.png)
 </div>
-<div data-marpit-fragment="3">
+<div data-marpit-fragment="4">
 
 ![height:250px](assets/electronics.jpg)
 </div>
 </div>
 
 ---
+
+-->
 
 - Maintainer of Home Assistant Jewish calendar integration
   <span style="display: flex; align-items: center; justify-content: flex-start">
@@ -61,17 +62,19 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 <!-- 2 min - A story describing what a plugin architecture solves  -->
 
-## A short story
+<div style="text-align: center;">
+  
+  <!-- Image -->
+  ![Alt Text](assets/standards_2x.png)
 
-* You write a Python app supporting a variety of options
-* A user asks for their specific-use case ...
-* Another user asks for their specific-use case ...
-* A third user asks for their specific-use case ...
-* You realize that slowly your app is becoming a 
-
----
-
-![bg width:95%](assets/one-more-thing.png)
+  <!-- Caption with attribution -->
+  <p style="font-size: 0.8em; color: gray; margin-top: 0.5em;">
+    "Standards" by Randall Munroe, XKCD. Available at: 
+    <a href="https://xkcd.com/927/" target="_blank" style="color: #0066cc; text-decoration: none;">
+      xkcd.com/927
+    </a>
+  </p>
+</div>
 
 ---
 
@@ -129,13 +132,6 @@ flowchart LR
 
 ---
 
-<span style="display: flex; justify-content: center">
-
-![height:500px](./assets/codegen-step-5.svg)
-</span>
-
----
-
 # Jinja templates and filters
 
 * Jinja is a templating engine built on Python
@@ -160,36 +156,7 @@ Hello TSVI!
 
 ---
 
-
-<!-- 
-3 min
-Explain what plugins need to be supported.
- - Discovery - can be automatic or manual
-    - Automatic - search for pre-defined directories/names
-    - Manual - provided by a configuration
- - Loading and Registration
-    - We need the application to understand what can be called
-    - In our example:
-        - Jinja must be aware of the available filters
-        - When trying to parse a data source we need to know that a parser is available
-
-# Supporting plugins - what is needed?
-
-* Discovery
-    - Automatic (based on predefined scheme (naming/packaging))
-    - Manual (provided by app configuration)
-* Loading and Registration
-
----
-
--->
-
-# Coding time: adding a Jinja filter
-
-<!--
-- Explain why we need the dunder variable (allow for testing)
--->
-
+# Adding a new Jinja filter
 
 <div data-marpit-fragment="1">
 
@@ -223,20 +190,9 @@ def camel(text: str) -> str:
 
 ---
 
-# How can we import this dynamically? (Registration)
-
-```python highlight:5 title:"Setup template environment"
-from jinja2 import Environment, FileSystemLoader
-
-def setup_template_env(template_dir: Path, filter_file: Path):
-    template_env = Environment(loader=FileSystemLoader(template_dir))
-    template_env.filters.update(get_filters(filter_file))
-    return template_env
-```
-
----
-
 # How can we import this dynamically? (Lookup)
+
+<div data-marpit-fragment="1">
 
 ```python title:"Getting the filters" dim:10-14
 from importlib import util
@@ -255,6 +211,8 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
         }
     return members
 ```
+
+</div>
 
 ---
 
@@ -280,6 +238,44 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 ---
 
+# Registering the filter
+
+<div data-marpit-fragment="1">
+
+```python title:"Setup template environment"
+import jinja2
+
+def setup_template_env(template_dir: Path, filter_file: Path):
+    template_env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(template_dir)
+    )
+    template_env.filters.update(get_filters(filter_file))
+    return template_env
+```
+</div>
+
+---
+
+# Registering the filter
+
+<div data-marpit-fragment="0">
+
+```python highlight:7 title:"Setup template environment"
+import jinja2
+
+def setup_template_env(template_dir: Path, filter_file: Path):
+    template_env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(template_dir)
+    )
+    template_env.filters.update(get_filters(filter_file))
+    return template_env
+```
+
+</div>
+
+---
+
+
 # Let's return to our filter implementation
 
 ```python title:"Filter implementation" highlight:1
@@ -295,6 +291,8 @@ def camel(text: str) -> str:
 ---
 
 # Using the entry-point mechanism: Adding a data parser
+
+---
 
 <span style="display: flex; justify-content: center">
 
@@ -319,7 +317,7 @@ def parse_yaml(path: Path) -> dict[str, Any]:
 
 <div data-marpit-fragment="2">
 
-Registration of our parser:
+Telling our environment where to look:
 
 ```toml no-line-number title:"pyproject.toml"
 [project.entry-points.codegen-parsers]
@@ -331,12 +329,6 @@ yaml = "parsers:parse_yaml"
 ---
 
 <!--
-Entry points - 4 min
-
-Entry points have multiple usages:
- - CLI/GUI scripts
- - Plugins
--->
 
 # Parsing a data file
 
@@ -362,7 +354,9 @@ def parse_data(data_file: Path) -> dict[str, Any]:
 
 ---
 
-# Parsing a data file (Plugin lookup)
+-->
+
+# Parsing a data file
 
 ```python title:"Parsing data using plugin" dim:2-4,6,8-10,14-17
 from importlib.metadata import entry_points
@@ -386,7 +380,7 @@ def parse_data(data_file: Path) -> dict[str, Any]:
 
 ---
 
-# Parsing a data file (Plugin lookup)
+# Parsing a data file
 
 ```python title:"Parsing data full example"
 from importlib.metadata import entry_points
@@ -412,17 +406,15 @@ def parse_data(data_file: Path) -> dict[str, Any]:
 
 # Recap
 
-<!--
-
-- Why do we want plugins?
-- What do we need to define a plugin?
-- How can we support plugins?
-
--->
-
 * Why?
+    * Extensibility
+    * Remove the maintenance burden
 * What?
+    * Lookup
+    * Registration
 * How?
+    * Simple dynamic import using importlib
+    * Use importlib's metadata entry points
 
 ---
 
