@@ -59,9 +59,9 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 ---
 
-<!-- 2 min - A story describing what a plugin architecture solves 
+<!-- 2 min - A story describing what a plugin architecture solves  -->
 
-## Intro
+## A short story
 
 * You write a Python app supporting a variety of options
 * A user asks for their specific-use case ...
@@ -75,24 +75,10 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 ---
 
--->
 <!-- 3 min
 
 Step-by-step introduce the example tool for our talk using a block diagram.
 The tool (a code generator) takes a configuration file, a Jinja template, and data and generates code by applying the template to the data.
-
-(Explain 30 seconds on Jinja)
-
-Our plugin architecture will focus on two points that should be highlighted by the end of the slide:
-    - Using user-defined Jinja filters
-    - Support new data sources
-
-Show the graph step by step.
-- Step 1: CodeGen Tool
-- Step 2: Inputs
-- Step 3: Output
-- Step 4: Highlight the arrow going from the tool to the output
-- Step 5: Highlight the data block
 
 mermaid
 flowchart LR
@@ -104,11 +90,11 @@ flowchart LR
 
     step3[Generated Code]
 
-    step2a --/> step1
-    step2b --/> step1
-    step2c --/> step1
+    step2a --- step1
+    step2b --- step1
+    step2c --- step1
 
-    step1 --/> step3
+    step1 --- step3
 -->
 
 # A Real-Life Example
@@ -136,11 +122,25 @@ flowchart LR
 
 ---
 
-# Jinja templates
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-4.svg)
+</span>
+
+---
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-5.svg)
+</span>
+
+---
+
+# Jinja templates and filters
 
 * Jinja is a templating engine built on Python
 * Widely used by open-source projects (Django, Ansible, Home Assistant)
-* Filters are python methods that can be used in the template as follows:
+* Filters are python methods that can be used in a template
 
 <div data-marpit-fragment="1">
 
@@ -160,12 +160,6 @@ Hello TSVI!
 
 ---
 
-<span style="display: flex; justify-content: center">
-
-![height:500px](./assets/codegen-step-4.svg)
-</span>
-
----
 
 <!-- 
 3 min
@@ -194,20 +188,17 @@ Explain what plugins need to be supported.
 
 <!--
 - Explain why we need the dunder variable (allow for testing)
-- DO NOT DISCUSS 3rd-party unless asked about
-- https://capitalizemytitle.com/camel-case/
-- https://learn.microsoft.com/sv-se/archive/blogs/brada/history-around-pascal-casing-and-camel-casing
 -->
 
 
 <div data-marpit-fragment="1">
 
 ```jinja no-line-number title:"Jinja code"
-{{ "variable name" | pascal }}
+{{ "variable name" | camel }}
 ```
 
 ```text no-line-number title:"Output"
-VariableName
+variableName
 ```
 
 </div>
@@ -222,9 +213,10 @@ Let's implement our filter:
 <div data-marpit-fragment="3">
 
 ```python title:"Filter implementation"
-def pascal(text: str) -> str:
-    """Return the given string as PascalCase."""
-    return capwords(text, sep=" ").replace(" ", "")
+def camel(text: str) -> str:
+    """Return the given string as camelCase."""
+    capitalized = capwords(text, sep=" ").replace(" ", "")
+    return capitalized[0].lower() + capitalized[1:]
 ```
 
 </div>
@@ -233,34 +225,13 @@ def pascal(text: str) -> str:
 
 # How can we import this dynamically? (Registration)
 
-```python dim:3-6 title:"Registering our filters"
+```python highlight:5 title:"Setup template environment"
 from jinja2 import Environment, FileSystemLoader
 
 def setup_template_env(template_dir: Path, filter_file: Path):
     template_env = Environment(loader=FileSystemLoader(template_dir))
     template_env.filters.update(get_filters(filter_file))
     return template_env
-
-def render(template_env: Environment, template_file: Path, data: dict):
-    template = template_env.get_template(template_file)
-    return template.render(**data)
-```
-
----
-
-# How can we import this dynamically? (Registration)
-
-```python highlight:5 dim:8-10 title:"Setup template environment"
-from jinja2 import Environment, FileSystemLoader
-
-def setup_template_env(template_dir: Path, filter_file: Path):
-    template_env = Environment(loader=FileSystemLoader(template_dir))
-    template_env.filters.update(get_filters(filter_file))
-    return template_env
-
-def render(template_env: Environment, template_file: Path, data: dict):
-    template = template_env.get_template(template_file)
-    return template.render(**data)
 ```
 
 ---
@@ -312,17 +283,23 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 # Let's return to our filter implementation
 
 ```python title:"Filter implementation" highlight:1
-__filters__ = ["pascal"]
+__filters__ = ["camel"]
 
 
-def pascal(text: str) -> str:
-    """Return the given string as a pascal case."""
-    return capwords(text, sep=" ").replace(" ", "")
+def camel(text: str) -> str:
+    """Return the given string as a camelCase."""
+    capitalized = capwords(text, sep=" ").replace(" ", "")
+    return capitalized[0].lower() + capitalized[1:]
 ```
 
 ---
 
 # Using the entry-point mechanism: Adding a data parser
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-6.svg)
+</span>
 
 ---
 

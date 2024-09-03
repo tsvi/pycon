@@ -185,13 +185,13 @@
         <g class="root">
             <g class="clusters"></g>
             <g class="edgePaths">
-                <path marker-end="url(#graph-div_flowchart-v2-pointEnd)" class="edge-thickness-normal edge-pattern-solid flowchart-link" id="L_step2a_step1_0" d="M165.033,35L169.2,35C173.367,35,181.7,35,194.027,41.417C206.354,47.833,222.674,60.667,238.47,73.088C254.267,85.509,269.539,97.518,277.175,103.523L284.811,109.527">
+                <path marker-end="url(#graph-div_flowchart-v2-pointEnd)" style="" class="edge-thickness-normal edge-pattern-solid flowchart-link" id="L_step2a_step1_0" d="M165.033,35L169.2,35C173.367,35,181.7,35,194.027,41.417C206.354,47.833,222.674,60.667,238.47,73.088C254.267,85.509,269.539,97.518,277.175,103.523L284.811,109.527">
                 </path>
                 <path marker-end="url(#graph-div_flowchart-v2-pointEnd-red)" class="edge-thickness-normal edge-pattern-solid flowchart-link" id="L_step2b_step1_1" style="stroke:red; stroke-width: 2.5" d="M149.733,139L156.45,139C163.167,139,176.6,139,185.4,139C194.2,139,198.367,139,201.867,139C205.367,139,208.2,139,209.617,139L211.033,139">
                 </path>
-                <path marker-end="url(#graph-div_flowchart-v2-pointEnd)" class="edge-thickness-normal edge-pattern-solid flowchart-link" id="L_step2c_step1_2" style="" d="M133,243L142.506,243C152.011,243,171.022,243,188.688,236.583C206.354,230.167,222.674,217.333,238.47,204.912C254.267,192.491,269.539,180.482,277.175,174.477L284.811,168.473">
+                <path marker-end="url(#graph-div_flowchart-v2-pointEnd-red)" class="edge-thickness-normal edge-pattern-solid flowchart-link" id="L_step2c_step1_2" style="stroke:red; stroke-width: 2.5" d="M133,243L142.506,243C152.011,243,171.022,243,188.688,236.583C206.354,230.167,222.674,217.333,238.47,204.912C254.267,192.491,269.539,180.482,277.175,174.477L284.811,168.473">
                 </path>
-                <path marker-end="url(#graph-div_flowchart-v2-pointEnd)" class="edge-thickness-normal edge-pattern-solid flowchart-link" id="L_step1_step3_3" d="M429.55,139L433.717,139C437.883,139,446.217,139,452.467,139C458.717,139,462.883,139,466.383,139C469.883,139,472.717,139,474.133,139L475.55,139">
+                <path marker-end="url(#graph-div_flowchart-v2-pointEnd)" style="" class="edge-thickness-normal edge-pattern-solid flowchart-link" id="L_step1_step3_3" d="M429.55,139L433.717,139C437.883,139,446.217,139,452.467,139C458.717,139,462.883,139,466.383,139C469.883,139,472.717,139,474.133,139L475.55,139">
                 </path>
             </g>
             <g class="edgeLabels">
@@ -326,6 +326,16 @@
         <rect x="150" y="250" width="40" height="20" fill="#ddd" stroke="#000" stroke-width="1" />
         <polygon points="150,250 160,250 150,260" fill="#aaa" stroke="#000" stroke-width="1"/>
         <text x="155" y="265" font-size="15" fill="#000">.json</text>
+    </g>
+    <g class="file-icon">
+        <rect x="200" y="250" width="40" height="20" fill="pink" stroke="#000" stroke-width="1" />
+        <polygon points="200,250 210,250 200,260" fill="#aa5966" stroke="#000" stroke-width="1"/>
+        <text x="205" y="265" font-size="15" fill="red">.xml</text>
+    </g>
+    <g class="file-icon">
+        <rect x="250" y="250" width="40" height="20" fill="pink" stroke="#000" stroke-width="1" />
+        <polygon points="250,250 260,250 250,260" fill="#aa5966" stroke="#000" stroke-width="1"/>
+        <text x="255" y="265" font-size="15" fill="red">.yml</text>
     </g>
 
     <!-- Callout box -->
