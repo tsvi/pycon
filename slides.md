@@ -16,32 +16,6 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 # Bio
 
-<!--
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-<div data-marpit-fragment="1">
-
-![height:250px](assets/belgium-flag.svg)
-</div>
-<div data-marpit-fragment="2">
-
-![height:250px](assets/israel-flag.png)
-</div>
-</div>
-
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-<div data-marpit-fragment="3">
-
-![height:250px](assets/psion5.jpg) ![height:250px](assets/opl-docs.png)
-</div>
-<div data-marpit-fragment="4">
-
-![height:250px](assets/electronics.jpg)
-</div>
-</div>
-
----
-
--->
 <div data-marpit-fragment="1">
 
 - Maintainer of Home Assistant Jewish calendar integration
@@ -126,13 +100,6 @@ flowchart LR
 
 ---
 
-<span style="display: flex; justify-content: center">
-
-![height:500px](./assets/codegen-step-4.svg)
-</span>
-
----
-
 # Jinja templates and filters
 
 * Jinja is a templating engine built on Python
@@ -154,6 +121,13 @@ Hello TSVI!
 ```
 
 </div>
+
+---
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-4.svg)
+</span>
 
 ---
 
