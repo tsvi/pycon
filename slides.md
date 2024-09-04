@@ -42,6 +42,7 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 ---
 
 -->
+<div data-marpit-fragment="1">
 
 - Maintainer of Home Assistant Jewish calendar integration
   <span style="display: flex; align-items: center; justify-content: flex-start">
@@ -50,7 +51,7 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
  </span>
 </div>
 
-<div data-marpit-fragment="1">
+<div data-marpit-fragment="2">
 
 - Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
   <span style="display: inline-block; vertical-align: middle;">
@@ -62,12 +63,12 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 <!-- 2 min - A story describing what a plugin architecture solves  -->
 
-<div style="text-align: center;">
-  
-  <!-- Image -->
-  ![Alt Text](assets/standards_2x.png)
+# A similar problem with a different twist
 
-  <!-- Caption with attribution -->
+<div style="text-align: center;" data-marpit-fragment="1">
+  
+  ![height:450px](assets/standards_2x.png)
+
   <p style="font-size: 0.8em; color: gray; margin-top: 0.5em;">
     "Standards" by Randall Munroe, XKCD. Available at: 
     <a href="https://xkcd.com/927/" target="_blank" style="color: #0066cc; text-decoration: none;">
@@ -216,6 +217,20 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 ---
 
+# Let's return to our filter implementation
+
+```python title:"Filter implementation" highlight:1
+__filters__ = ["camel"]
+
+
+def camel(text: str) -> str:
+    """Return the given string as a camelCase."""
+    capitalized = capwords(text, sep=" ").replace(" ", "")
+    return capitalized[0].lower() + capitalized[1:]
+```
+
+---
+
 # How can we import this dynamically? (Lookup)
 
 ```python title:"Filtering the filters 😊" dim:6-9
@@ -242,7 +257,7 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 <div data-marpit-fragment="1">
 
-```python title:"Setup template environment"
+```python title:"Setup template environment" highlight:7
 import jinja2
 
 def setup_template_env(template_dir: Path, filter_file: Path):
@@ -253,44 +268,21 @@ def setup_template_env(template_dir: Path, filter_file: Path):
     return template_env
 ```
 </div>
-
----
-
-# Registering the filter
-
-<div data-marpit-fragment="0">
-
-```python highlight:7 title:"Setup template environment"
-import jinja2
-
-def setup_template_env(template_dir: Path, filter_file: Path):
-    template_env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(template_dir)
-    )
-    template_env.filters.update(get_filters(filter_file))
-    return template_env
-```
-
-</div>
-
----
-
-
-# Let's return to our filter implementation
-
-```python title:"Filter implementation" highlight:1
-__filters__ = ["camel"]
-
-
-def camel(text: str) -> str:
-    """Return the given string as a camelCase."""
-    capitalized = capwords(text, sep=" ").replace(" ", "")
-    return capitalized[0].lower() + capitalized[1:]
-```
 
 ---
 
 # Using the entry-point mechanism: Adding a data parser
+
+<div style="font-style: italic; font-size: 1.2em; color: #5C4D7D;" data-marpit-fragment="1">
+
+> “There should be one— and preferably only one —obvious way to do it.”  
+> — The Zen of Python (PEP20)
+
+</div>
+
+<div data-marpit-fragment="2" style="margin-top: 1em;">
+Yeah right 😂
+</div>
 
 ---
 
@@ -328,34 +320,6 @@ yaml = "parsers:parse_yaml"
 
 ---
 
-<!--
-
-# Parsing a data file
-
-```python title:"Parsing data" dim:1-2,4-6,11-14
-from importlib.metadata import entry_points
-
-from parsers import BUILTIN_PARSERS
-
-discovered_parsers = entry_points(group='codegen-parsers')
-    
-def get_parser(data_file: Path) -> Callable:
-    parser = BUILTIN_PARSERS.get(data_file.suffix)
-    if parser:
-        return parser
-    parser_ep = discovered_parsers.get(data_file.suffix) 
-    if parser_ep:
-        return parser_ep.load()
-
-def parse_data(data_file: Path) -> dict[str, Any]:
-    parse = get_parser(data_file)
-    parse(data_file)
-```
-
----
-
--->
-
 # Parsing a data file
 
 ```python title:"Parsing data using plugin" dim:2-4,6,8-10,14-17
@@ -382,7 +346,7 @@ def parse_data(data_file: Path) -> dict[str, Any]:
 
 # Parsing a data file
 
-```python title:"Parsing data full example"
+```python title:"Parsing data full example" highlight:16
 from importlib.metadata import entry_points
 
 from parsers import BUILTIN_PARSERS
@@ -410,8 +374,7 @@ def parse_data(data_file: Path) -> dict[str, Any]:
     * Extensibility
     * Remove the maintenance burden
 * What?
-    * Lookup
-    * Registration
+    * Lookup & Registration
 * How?
     * Simple dynamic import using importlib
     * Use importlib's metadata entry points
