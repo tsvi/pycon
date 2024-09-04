@@ -217,20 +217,6 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 ---
 
-# Let's return to our filter implementation
-
-```python title:"Filter implementation" highlight:1
-__filters__ = ["camel"]
-
-
-def camel(text: str) -> str:
-    """Return the given string as a camelCase."""
-    capitalized = capwords(text, sep=" ").replace(" ", "")
-    return capitalized[0].lower() + capitalized[1:]
-```
-
----
-
 # How can we import this dynamically? (Lookup)
 
 ```python title:"Filtering the filters 😊" dim:6-9
@@ -249,6 +235,20 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
             if name in filter_module.__filters__
         }
     return members
+```
+
+---
+
+# Let's return to our filter implementation
+
+```python title:"Filter implementation" highlight:1
+__filters__ = ["camel"]
+
+
+def camel(text: str) -> str:
+    """Return the given string as a camelCase."""
+    capitalized = capwords(text, sep=" ").replace(" ", "")
+    return capitalized[0].lower() + capitalized[1:]
 ```
 
 ---
