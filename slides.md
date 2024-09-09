@@ -8,29 +8,43 @@ title: Designing a plugin architecture in Python
 
 # Designing a plugin architecture in Python
 
-Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
+Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 
 ---
 
 <!-- 2 min - Who am I, what I do, a bit about Intel -->
 
 # Bio
+<!-- Slide with a cleaner and more consistent layout -->
 
-<div data-marpit-fragment="1">
+<div class="image-container">
 
-- Maintainer of Home Assistant Jewish calendar integration
-  <span style="display: flex; align-items: center; justify-content: flex-start">
- ![height:150px margin-right:10px](assets/home-assistant.png)
- ![height:150px](assets/jewish-calendar.png)
- </span>
-</div>
+  <!-- Upper Left: Belgium Flag -->
+  <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="1">
+  <img src="assets/belgium-flag.svg" alt="Belgium Flag" class="image-item" style="width: 150px; height: 100px;">
+  <img src="assets/israel-flag.png" alt="Israel Flag" class="image-item" style="width: 150px; height: auto;">
+  </div>
 
-<div data-marpit-fragment="2">
+  <!-- Upper Right: Psion 5 and OPL Reference Guide -->
+  <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="2">
+    <img src="assets/psion5.jpg" alt="Psion 5" class="image-item" style="width: 150px; height: 150px;">
+    <img src="assets/opl-docs.png" alt="OPL Docs" class="image-item" style="width: 150px; height: auto;">
+  </div>  
+  
+  <!-- Jewish Calendar Logo - Appears third -->
+  <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="3">
+  <img src="assets/jewish-calendar.png" alt="Jewish Calendar Logo" class="image-item" style="width: 150px; height: 150px;">
+  <img src="assets/home-assistant.png" alt="Home Assistant Logo" class="image-item" style="width: 150px; height: 150px;">
+  </div>
 
-- Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
-  <span style="display: inline-block; vertical-align: middle;">
-  ![height:150px margin-left:l-10px](assets/intel.png)
-  </span>
+  <!-- Lower Right: Intel -->
+  <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="5">
+    <img src="assets/intel.png" alt="Intel Logo" class="image-item" style="width: 150px; height: auto;">
+  </div>
+
+  <div data-marpit-fragment="6">
+    Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
+  </div>
 </div>
 
 ---
@@ -39,16 +53,18 @@ Tsvi Mostovicz | Pycon IL 2024 | Cinema City Glilot, Israel
 
 # A similar problem with a different twist
 
-<div style="text-align: center;" data-marpit-fragment="1">
-  
-  ![height:450px](assets/standards_2x.png)
+<div style="display: flex; align-items: center; justify-content: center; gap:150px">
 
-  <p style="font-size: 0.8em; color: gray; margin-top: 0.5em;">
-    "Standards" by Randall Munroe, XKCD. Available at: 
-    <a href="https://xkcd.com/927/" target="_blank" style="color: #0066cc; text-decoration: none;">
-      xkcd.com/927
-    </a>
-  </p>
+<div data-marpit-fragment="1">
+
+![height:450px](assets/multitool.jpg)
+</div>
+
+<div data-marpit-fragment="2">
+
+![height:450px](assets/multibit-screwdriver.jpg)
+</div>
+
 </div>
 
 ---
