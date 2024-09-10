@@ -12,32 +12,25 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 
 ---
 
-<!-- 2 min - Who am I, what I do, a bit about Intel -->
-
 # Bio
-<!-- Slide with a cleaner and more consistent layout -->
 
 <div class="image-container">
 
-  <!-- Upper Left: Belgium Flag -->
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="1">
   <img src="assets/belgium-flag.svg" alt="Belgium Flag" class="image-item" style="width: 150px; height: 100px;">
   <img src="assets/israel-flag.png" alt="Israel Flag" class="image-item" style="width: 150px; height: auto;">
   </div>
 
-  <!-- Upper Right: Psion 5 and OPL Reference Guide -->
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="2">
     <img src="assets/psion5.jpg" alt="Psion 5" class="image-item" style="width: 150px; height: 150px;">
     <img src="assets/opl-docs.png" alt="OPL Docs" class="image-item" style="width: 150px; height: auto;">
   </div>  
   
-  <!-- Jewish Calendar Logo - Appears third -->
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="3">
   <img src="assets/jewish-calendar.png" alt="Jewish Calendar Logo" class="image-item" style="width: 150px; height: 150px;">
   <img src="assets/home-assistant.png" alt="Home Assistant Logo" class="image-item" style="width: 150px; height: 150px;">
   </div>
 
-  <!-- Lower Right: Intel -->
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="5">
     <img src="assets/intel.png" alt="Intel Logo" class="image-item" style="width: 150px; height: auto;">
   </div>
@@ -48,8 +41,6 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 </div>
 
 ---
-
-<!-- 2 min - A story describing what a plugin architecture solves  -->
 
 # A similar problem with a different twist
 
@@ -109,12 +100,22 @@ flowchart LR
 
 ---
 
+<!-- 
+What might a user want to do?
+    - Support more filters
+    - Support more data formats
+-->
+
 <span style="display: flex; justify-content: center">
 
 ![height:500px](./assets/codegen-step-3.svg)
 </span>
 
 ---
+
+<!-- 
+Expand on filters. upper is a filter...
+-->
 
 # Jinja templates and filters
 
@@ -139,6 +140,13 @@ Hello TSVI!
 </div>
 
 ---
+
+<!--
+I'll show how to:
+- create a filter
+- look it up and
+- register it as part of the Jinja environment.
+-->
 
 <span style="display: flex; justify-content: center">
 
@@ -207,6 +215,16 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 ---
 
+<!--
+
+Reasons for filtering out filters:
+
+    - Security: accidental exposure of functions that are not intended to be used as filters
+    - Clarity and Maintenance: It makes it easier to understand and maintain. 
+    - Namespace Pollution: A module might contain helper functions or other code that is not meant to be exposed as part of the filter API.
+    - Error Prevention: If the module is updated and new functions are added that are not intended to be used as filters.
+-->
+
 # How can we import this dynamically? (Lookup)
 
 ```python title:"Filtering the filters 😊" dim:6-9
@@ -261,8 +279,6 @@ def setup_template_env(template_dir: Path, filter_file: Path):
 
 ---
 
-# Using the entry-point mechanism: Adding a data parser
-
 <div style="font-style: italic; font-size: 1.2em; color: #5C4D7D;" data-marpit-fragment="1">
 
 > “There should be one— and preferably only one —obvious way to do it.”  
@@ -275,6 +291,18 @@ Yeah right 😂
 </div>
 
 ---
+
+# Using the entry-point mechanism: Adding a data parser
+
+---
+
+<!--
+I'll show how to:
+- create a data parser
+- look it up and
+- register it as part of our tool.
+-->
+
 
 <span style="display: flex; justify-content: center">
 
