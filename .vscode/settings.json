@@ -4,5 +4,6 @@
     "./themes/rose-pine-dawn.css",
     "./themes/pycon-talk-theme.css",
   ],
-  "svg.preview.background": "white"
+  "svg.preview.background": "white",
+  "markdown.marp.exportType": "html"
 }
