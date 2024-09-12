@@ -169,14 +169,12 @@ variableName
 
 </div>
 
-<div data-marpit-fragment="2">
-
-Let's implement our filter:
-
-</div>
+---
 
 
-<div data-marpit-fragment="3">
+# Let's implement our filter
+
+<div data-marpit-fragment="1">
 
 ```python title:"Filter implementation"
 def camel(text: str) -> str:
@@ -193,7 +191,7 @@ def camel(text: str) -> str:
 
 <div data-marpit-fragment="1">
 
-```python title:"Getting the filters" dim:10-14
+```python title:"Getting the filters" highlight:1,6-7
 from importlib import util
 from inspect import getmembers, isfunction
 
@@ -203,11 +201,6 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
     filter_module = util.module_from_spec(spec)
     spec.loader.exec_module(filter_module)
     members = dict(getmembers(filter_module, isfunction))
-    if "__filters__" in dir(filter_module):
-        members = {
-            name: func for name, func in members.items()
-            if name in filter_module.__filters__
-        }
     return members
 ```
 
@@ -215,19 +208,9 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 ---
 
-<!--
-
-Reasons for filtering out filters:
-
-    - Security: accidental exposure of functions that are not intended to be used as filters
-    - Clarity and Maintenance: It makes it easier to understand and maintain. 
-    - Namespace Pollution: A module might contain helper functions or other code that is not meant to be exposed as part of the filter API.
-    - Error Prevention: If the module is updated and new functions are added that are not intended to be used as filters.
--->
-
 # How can we import this dynamically? (Lookup)
 
-```python title:"Filtering the filters 😊" dim:6-9
+```python title:"Getting the filters" highlight:8
 from importlib import util
 from inspect import getmembers, isfunction
 
@@ -237,26 +220,24 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
     filter_module = util.module_from_spec(spec)
     spec.loader.exec_module(filter_module)
     members = dict(getmembers(filter_module, isfunction))
-    if "__filters__" in dir(filter_module):
-        members = {
-            name: func for name, func in members.items()
-            if name in filter_module.__filters__
-        }
     return members
 ```
 
 ---
 
-# Let's return to our filter implementation
+# How can we import this dynamically? (Lookup)
 
-```python title:"Filter implementation" highlight:1
-__filters__ = ["camel"]
+```python title:"Getting the filters" highlight:2,9
+from importlib import util
+from inspect import getmembers, isfunction
 
-
-def camel(text: str) -> str:
-    """Return the given string as a camelCase."""
-    capitalized = capwords(text, sep=" ").replace(" ", "")
-    return capitalized[0].lower() + capitalized[1:]
+def get_filters(filter_file: Path) -> dict[str, Callable]:
+    """Return a dictionary of dynamically loaded filters."""
+    spec = util.spec_from_file_location(filter_file.stem, filter_file)
+    filter_module = util.module_from_spec(spec)
+    spec.loader.exec_module(filter_module)
+    members = dict(getmembers(filter_module, isfunction))
+    return members
 ```
 
 ---
@@ -279,14 +260,14 @@ def setup_template_env(template_dir: Path, filter_file: Path):
 
 ---
 
-<div style="font-style: italic; font-size: 1.2em; color: #5C4D7D;" data-marpit-fragment="1">
+<div style="font-style: italic; font-size: 1.2em; color: #5C4D7D;">
 
 > “There should be one— and preferably only one —obvious way to do it.”  
 > — The Zen of Python (PEP20)
 
 </div>
 
-<div data-marpit-fragment="2" style="margin-top: 1em;">
+<div data-marpit-fragment="1" style="margin-top: 1em;">
 Yeah right 😂
 </div>
 
@@ -325,16 +306,39 @@ def parse_yaml(path: Path) -> dict[str, Any]:
 
 </div>
 
-<div data-marpit-fragment="2">
+---
 
-Telling our environment where to look:
+# Entry points
+ 
+* Metadata that can be exposed by packages on installation
+* Syntax: `<name> = <package_or_module>[:<object>[.<attr>[.<nested-attr>]*]]`
+* Roughly translated to:
+
+<div data-marpit-fragment="1">
+
+```python no-line-number title:"Entry points translation"
+from <package_or_module> import <object>
+parsed_value = <object>.<attr>.<nested_attr>
+```
+
+</div>
+
+---
+
+# Telling our environment where to look
 
 ```toml no-line-number title:"pyproject.toml"
 [project.entry-points.codegen-parsers]
 yaml = "parsers:parse_yaml"
 ```
 
-</div>
+```python title:"Parser implementation" no-line-number
+"""parsers.py"""
+import yaml
+
+def parse_yaml(path: Path) -> dict[str, Any]:
+    return yaml.safe_load(path.read_text())
+```
 
 ---
 
