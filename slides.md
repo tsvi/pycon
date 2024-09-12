@@ -24,8 +24,8 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="2">
     <img src="assets/psion5.jpg" alt="Psion 5" class="image-item" style="width: 150px; height: 150px;">
     <img src="assets/opl-docs.png" alt="OPL Docs" class="image-item" style="width: 150px; height: auto;">
-  </div>  
-  
+  </div>
+
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="3">
   <img src="assets/jewish-calendar.png" alt="Jewish Calendar Logo" class="image-item" style="width: 150px; height: 150px;">
   <img src="assets/home-assistant.png" alt="Home Assistant Logo" class="image-item" style="width: 150px; height: 150px;">
@@ -41,6 +41,8 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 </div>
 
 ---
+
+<!-- Focus on the software issue, don't explain the tools -->
 
 # A similar problem with a different twist
 
@@ -100,7 +102,7 @@ flowchart LR
 
 ---
 
-<!-- 
+<!--
 What might a user want to do?
     - Support more filters
     - Support more data formats
@@ -113,7 +115,21 @@ What might a user want to do?
 
 ---
 
-<!-- 
+<!--
+I'll show how to:
+- create a filter
+- look it up and
+- register it as part of the Jinja environment.
+-->
+
+<span style="display: flex; justify-content: center">
+
+![height:500px](./assets/codegen-step-4.svg)
+</span>
+
+---
+
+<!--
 Expand on filters. upper is a filter...
 -->
 
@@ -141,20 +157,6 @@ Hello TSVI!
 
 ---
 
-<!--
-I'll show how to:
-- create a filter
-- look it up and
-- register it as part of the Jinja environment.
--->
-
-<span style="display: flex; justify-content: center">
-
-![height:500px](./assets/codegen-step-4.svg)
-</span>
-
----
-
 # Adding a new Jinja filter
 
 <div data-marpit-fragment="1">
@@ -168,11 +170,6 @@ variableName
 ```
 
 </div>
-
----
-
-
-# Let's implement our filter
 
 <div data-marpit-fragment="1">
 
@@ -244,8 +241,6 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 # Registering the filter
 
-<div data-marpit-fragment="1">
-
 ```python title:"Setup template environment" highlight:7
 import jinja2
 
@@ -256,13 +251,12 @@ def setup_template_env(template_dir: Path, filter_file: Path):
     template_env.filters.update(get_filters(filter_file))
     return template_env
 ```
-</div>
 
 ---
 
 <div style="font-style: italic; font-size: 1.2em; color: #5C4D7D;">
 
-> “There should be one— and preferably only one —obvious way to do it.”  
+> “There should be one— and preferably only one —obvious way to do it.”
 > — The Zen of Python (PEP20)
 
 </div>
@@ -292,29 +286,24 @@ I'll show how to:
 
 ---
 
-# Our new data parser
+# Entry points
+
+* Metadata that can be exposed by packages on installation
 
 <div data-marpit-fragment="1">
 
-```python title:"Parser implementation" no-line-number
-"""parsers.py"""
-import yaml
+- Syntax:
 
-def parse_yaml(path: Path) -> dict[str, Any]:
-    return yaml.safe_load(path.read_text())
+```toml no-line-number title:"pyproject.toml"
+[project.entry-points.<group_name>]
+<name> = <package_or_module>[:<object>[.<attr>[.<nested-attr>]*]]
 ```
 
 </div>
 
----
+<div data-marpit-fragment="2">
 
-# Entry points
- 
-* Metadata that can be exposed by packages on installation
-* Syntax: `<name> = <package_or_module>[:<object>[.<attr>[.<nested-attr>]*]]`
-* Roughly translated to:
-
-<div data-marpit-fragment="1">
+- When loaded, roughly translated to:
 
 ```python no-line-number title:"Entry points translation"
 from <package_or_module> import <object>
@@ -325,12 +314,9 @@ parsed_value = <object>.<attr>.<nested_attr>
 
 ---
 
-# Telling our environment where to look
+# Adding a new data parser
 
-```toml no-line-number title:"pyproject.toml"
-[project.entry-points.codegen-parsers]
-yaml = "parsers:parse_yaml"
-```
+<div data-marpit-fragment="1">
 
 ```python title:"Parser implementation" no-line-number
 """parsers.py"""
@@ -339,6 +325,17 @@ import yaml
 def parse_yaml(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text())
 ```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+```toml no-line-number title:"pyproject.toml"
+[project.entry-points.codegen-parsers]
+yaml = "parsers:parse_yaml"
+```
+
+</div>
 
 ---
 
@@ -350,12 +347,12 @@ from importlib.metadata import entry_points
 from parsers import BUILTIN_PARSERS
 
 discovered_parsers = entry_points(group='codegen-parsers')
-    
+
 def get_parser(data_file: Path) -> Callable:
     parser = BUILTIN_PARSERS.get(data_file.suffix)
     if parser:
         return parser
-    parser_ep = discovered_parsers.get(data_file.suffix) 
+    parser_ep = discovered_parsers.get(data_file.suffix)
     if parser_ep:
         return parser_ep.load()
 
@@ -374,12 +371,12 @@ from importlib.metadata import entry_points
 from parsers import BUILTIN_PARSERS
 
 discovered_parsers = entry_points(group='codegen-parsers')
-    
+
 def get_parser(data_file: Path) -> Callable:
     parser = BUILTIN_PARSERS.get(data_file.suffix)
     if parser:
         return parser
-    parser_ep = discovered_parsers.get(data_file.suffix) 
+    parser_ep = discovered_parsers.get(data_file.suffix)
     if parser_ep:
         return parser_ep.load()
 
