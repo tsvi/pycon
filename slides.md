@@ -42,7 +42,10 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 
 ---
 
-<!-- Focus on the software issue, don't explain the tools -->
+<!--
+- The multitool approach - a single tool handles multiple cases
+- The multibit screwdriver approach - a single tool can be used in a variety of confiugrations, not all of which are maintained or created by the same person
+-->
 
 # A similar problem with a different twist
 
@@ -61,28 +64,6 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 </div>
 
 ---
-
-<!-- 3 min
-
-Step-by-step introduce the example tool for our talk using a block diagram.
-The tool (a code generator) takes a configuration file, a Jinja template, and data and generates code by applying the template to the data.
-
-mermaid
-flowchart LR
-    step1[CodeGen Tool]
-
-    step2a[Configuration File]
-    step2b[Jinja Template]
-    step2c[Data]
-
-    step3[Generated Code]
-
-    step2a --- step1
-    step2b --- step1
-    step2c --- step1
-
-    step1 --- step3
--->
 
 # A Real-Life Example
 
@@ -103,9 +84,8 @@ flowchart LR
 ---
 
 <!--
-What might a user want to do?
-    - Support more filters
-    - Support more data formats
+PAUSE - Consider the following:
+  - Which parts could be extended?
 -->
 
 <span style="display: flex; justify-content: center">
@@ -115,11 +95,12 @@ What might a user want to do?
 
 ---
 
+# Leveraging importlib to dynamically import additional Jinja filters
+
+---
+
 <!--
-I'll show how to:
-- create a filter
-- look it up and
-- register it as part of the Jinja environment.
+Before we move on, we need to explain a little more about Jinja.
 -->
 
 <span style="display: flex; justify-content: center">
@@ -131,6 +112,9 @@ I'll show how to:
 
 <!--
 Expand on filters. upper is a filter...
+
+In the next slides we will create a new Jinja filter
+We'll then demonstrate how to import it dynamically and register it as part of the Jinja environment.
 -->
 
 # Jinja templates and filters
@@ -184,6 +168,13 @@ def camel(text: str) -> str:
 
 ---
 
+<!-- 
+importlib - the implementation of import
+
+Create a ModuleSpec based on file location
+Create a module object from spec
+-->
+
 # How can we import this dynamically? (Lookup)
 
 <div data-marpit-fragment="1">
@@ -205,6 +196,10 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 
 ---
 
+<!--
+Execute the module in its own namespace
+-->
+
 # How can we import this dynamically? (Lookup)
 
 ```python title:"Getting the filters" highlight:8
@@ -221,6 +216,12 @@ def get_filters(filter_file: Path) -> dict[str, Callable]:
 ```
 
 ---
+
+<!--
+inspect - inspect live objects
+getmembers - get members of an object
+isfunction - check if an object is a function
+-->
 
 # How can we import this dynamically? (Lookup)
 

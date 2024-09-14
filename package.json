@@ -4,6 +4,7 @@
   },
   "scripts": {
     "marp:serve": "PORT=8080 marp -s . --engine ./engine.js --html --allow-local-files",
-    "marp:export": "marp --theme-set ./themes --engine ./engine.js --html --allow-local-files slides.md -o slides.html"
+    "marp:export": "marp --theme-set ./themes --engine ./engine.js --html --allow-local-files slides.md -o slides.html",
+    "create-monolith": "monolith slides.html -o full-slides.html"
   }
 }
