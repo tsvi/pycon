@@ -14,16 +14,10 @@ This talk explores how to design and implement flexible and extensible plugin ar
 
 **Resources:**
 
-- [View Full Slide Set](./designing-a-plugin-architecture/full-slides.html)
-- [Watch Talk on YouTube](https://youtu.be/Gk3-8IKcj3Q?si=STJlz_T6Q2kWl793)
+[![View Full Slide Set](./designing-a-plugin-architecture/slide-preview.png)](https://html-preview.github.io/?url=https%3A%2F%2Fgithub.com%2Ftsvi%2Fpycon%2Fblob%2Fmaster%2Fdesigning-a-plugin-architecture%2Ffull-slides.html)
 
-**Presentation Slides:**
+[![Watch Talk on YouTube](https://img.youtube.com/vi/Gk3-8IKcj3Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=Gk3-8IKcj3Q)
 
-<iframe src="./designing-a-plugin-architecture/full-slides.html" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-**Watch the Talk:**
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Gk3-8IKcj3Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### [Beyond Constants: Mastering Python Enums](./mastering-enums/)
 
