@@ -12,10 +12,18 @@ This repository contains materials for my PyCon talks, including slides, code ex
 
 This talk explores how to design and implement flexible and extensible plugin architectures in Python applications. Learn strategies for dynamic imports, entry points, registration systems, and performance optimizations.
 
-**Links:**
+**Resources:**
 
-- [Full Slide Set](./designing-a-plugin-architecture/full-slides.html)
-- [YouTube Recording](https://youtu.be/Gk3-8IKcj3Q?si=STJlz_T6Q2kWl793)
+- [View Full Slide Set](./designing-a-plugin-architecture/full-slides.html)
+- [Watch Talk on YouTube](https://youtu.be/Gk3-8IKcj3Q?si=STJlz_T6Q2kWl793)
+
+**Presentation Slides:**
+
+<iframe src="./designing-a-plugin-architecture/full-slides.html" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+**Watch the Talk:**
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Gk3-8IKcj3Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### [Beyond Constants: Mastering Python Enums](./mastering-enums/)
 
