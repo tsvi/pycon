@@ -1,5 +1,4 @@
 {
-  "markdown.marp.enableHtml": true,
   "markdown.marp.themes": [
     "./themes/rose-pine-dawn.css",
     "./themes/pycon-talk-theme.css",
