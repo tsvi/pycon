@@ -17,22 +17,22 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 <div class="image-container">
 
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="1">
-  <img src="assets/belgium-flag.svg" alt="Belgium Flag" class="image-item" style="width: 150px; height: 100px;">
-  <img src="assets/israel-flag.png" alt="Israel Flag" class="image-item" style="width: 150px; height: auto;">
+  <img src="../assets/belgium-flag.svg" alt="Belgium Flag" class="image-item" style="width: 150px; height: 100px;">
+  <img src="../assets/israel-flag.png" alt="Israel Flag" class="image-item" style="width: 150px; height: auto;">
   </div>
 
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="2">
-    <img src="assets/psion5.jpg" alt="Psion 5" class="image-item" style="width: 150px; height: 150px;">
-    <img src="assets/opl-docs.png" alt="OPL Docs" class="image-item" style="width: 150px; height: auto;">
+    <img src="../assets/psion5.jpg" alt="Psion 5" class="image-item" style="width: 150px; height: 150px;">
+    <img src="../assets/opl-docs.png" alt="OPL Docs" class="image-item" style="width: 150px; height: auto;">
   </div>
 
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="3">
-  <img src="assets/jewish-calendar.png" alt="Jewish Calendar Logo" class="image-item" style="width: 150px; height: 150px;">
-  <img src="assets/home-assistant.png" alt="Home Assistant Logo" class="image-item" style="width: 150px; height: 150px;">
+  <img src="../assets/jewish-calendar.png" alt="Jewish Calendar Logo" class="image-item" style="width: 150px; height: 150px;">
+  <img src="../assets/home-assistant.png" alt="Home Assistant Logo" class="image-item" style="width: 150px; height: 150px;">
   </div>
 
   <div style="display: flex; flex-direction: column; align-items: center;" data-marpit-fragment="5">
-    <img src="assets/intel.png" alt="Intel Logo" class="image-item" style="width: 150px; height: auto;">
+    <img src="../assets/intel.png" alt="Intel Logo" class="image-item" style="width: 150px; height: auto;">
   </div>
 
   <div data-marpit-fragment="6">
@@ -53,12 +53,12 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 
 <div data-marpit-fragment="1">
 
-![height:450px](assets/multitool.jpg)
+![height:450px](../assets/multitool.jpg)
 </div>
 
 <div data-marpit-fragment="2">
 
-![height:450px](assets/multibit-screwdriver.jpg)
+![height:450px](../assets/multibit-screwdriver.jpg)
 </div>
 
 </div>
@@ -71,14 +71,14 @@ Tsvi Mostovicz, Intel | Pycon IL 2024 | Cinema City Glilot, Israel
 
 <span style="display: flex; justify-content: center">
 
-![height:500px](./assets/codegen-step-1.svg)
+![height:500px](./../assets/codegen-step-1.svg)
 </span>
 
 ---
 
 <span style="display: flex; justify-content: center">
 
-![height:500px](./assets/codegen-step-2.svg)
+![height:500px](./../assets/codegen-step-2.svg)
 </span>
 
 ---
@@ -90,7 +90,7 @@ PAUSE - Consider the following:
 
 <span style="display: flex; justify-content: center">
 
-![height:500px](./assets/codegen-step-3.svg)
+![height:500px](./../assets/codegen-step-3.svg)
 </span>
 
 ---
@@ -105,7 +105,7 @@ Before we move on, we need to explain a little more about Jinja.
 
 <span style="display: flex; justify-content: center">
 
-![height:500px](./assets/codegen-step-4.svg)
+![height:500px](./../assets/codegen-step-4.svg)
 </span>
 
 ---
@@ -282,7 +282,7 @@ I'll show how to:
 
 <span style="display: flex; justify-content: center">
 
-![height:500px](./assets/codegen-step-6.svg)
+![height:500px](./../assets/codegen-step-6.svg)
 </span>
 
 ---
@@ -406,12 +406,12 @@ def parse_data(data_file: Path) -> dict[str, Any]:
 <div style="display: flex; align-items: center; justify-content: center;">
 
 <div style="text-align: center; margin-right: 20px; margin-top: 75px;">
-<img src="assets/linkedin-qr.png" style="height: 150px; border: 2px solid #0077b5; border-radius: 10px;">
+<img src="../assets/linkedin-qr.png" style="height: 150px; border: 2px solid #0077b5; border-radius: 10px;">
 <br><b>LinkedIn:</b> <a href="https://linkedin.com/in/tsvim">linkedin.com/in/tsvim</a>
 </div>
 
 <div style="text-align: center; margin-left: 20px; margin-top: 75px;">
-<img src="assets/github-qr.png" style="height: 150px; border: 2px solid #333; border-radius: 10px;">
+<img src="../assets/github-qr.png" style="height: 150px; border: 2px solid #333; border-radius: 10px;">
 <br><b>GitHub:</b> <a href="https://github.com/tsvi">github.com/tsvi</a>
 </div>
 
