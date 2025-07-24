@@ -1,0 +1,16 @@
+{
+  "name": "mastering-enums-talk",
+  "version": "1.0.0",
+  "description": "Presentation materials for PyconIL 2025 talk on mastering Python enums",
+  "main": "engine.js",
+  "scripts": {
+    "build": "npx @marp-team/marp-cli@latest slides.md -o slides.html --engine ./engine.js --allow-local-files",
+    "pdf": "npx @marp-team/marp-cli@latest slides.md --engine ./engine.js --pdf --allow-local-files",
+    "preview": "npm run build && open slides.html"
+  },
+  "author": "Tsvi Mostovicz",
+  "license": "MIT",
+  "dependencies": {
+    "@marp-team/marp-cli": "^4.2.0"
+  }
+}

@@ -1,0 +1,133 @@
+/* @theme pycon-talk-theme */
+/* @auto-scaling false */
+/*
+PyconIL Talk Theme 2025
+Based on previous Pycon talk theme with enum-specific color scheme
+*/
+
+@import "rose-pine-dawn.css";
+
+:root {
+  --color-primary: #6A459C;       /* Deep purple for primary elements */
+  --color-secondary: #2AB7CA;     /* Bright teal for accents */
+  --color-tertiary: #FE5F55;      /* Coral for highlights */
+  --color-background: #F9F7F7;    /* Light gray for backgrounds */
+  --color-text: #333333;          /* Dark gray for text */
+  --color-code-bg: #F0ECF4;       /* Light purple for code backgrounds */
+  --color-comment: #78797A;       /* Gray for comments */
+  --font-primary: "Segoe UI", system-ui, sans-serif;
+  --font-code: "JetBrains Mono", "Cascadia Code", monospace;
+}
+
+section {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  padding: 3rem;
+}
+
+h1 {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+h2, h3 {
+  color: var(--color-primary);
+}
+
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--font-code);
+  background-color: var(--color-code-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+}
+
+pre {
+  background-color: var(--color-code-bg);
+  padding: 1rem;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.image-item {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+}
+
+/* Syntax highlighting for code blocks */
+.hljs-keyword {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+.hljs-string {
+  color: var(--color-tertiary);
+}
+
+.hljs-comment {
+  color: var(--color-comment);
+  font-style: italic;
+}
+
+.hljs-function {
+  color: var(--color-secondary);
+}
+
+/* Specific styling for enum-related code */
+.enum-class {
+  color: #6A459C; /* Purple */
+  font-weight: bold;
+}
+
+.enum-member {
+  color: #2AB7CA; /* Teal */
+}
+
+.enum-value {
+  color: #FE5F55; /* Coral */
+}
+
+/* Add styling for special sections */
+.warning {
+  background-color: #FFF3CD;
+  padding: 1rem;
+  border-left: 4px solid #FFC107;
+  margin: 1rem 0;
+}
+
+.tip {
+  background-color: #E3F2FD;
+  padding: 1rem;
+  border-left: 4px solid #2196F3;
+  margin: 1rem 0;
+}
+
+/* Footer for each slide */
+footer {
+  font-size: 0.8rem;
+  text-align: right;
+  position: absolute;
+  right: 2rem;
+  bottom: 1rem;
+  opacity: 0.7;
+}
