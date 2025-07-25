@@ -54,7 +54,31 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 
 ---
 
-# Basic Enum Refresher
+# 🤔 Why Enums?
+
+* Raw values: `status = 1`
+* Constants: `DONE = 1` - avoid typos
+
+<div data-marpit-fragment="3">
+
+- Grouped constants - related values
+
+```python --no-line-number
+class Status:
+    DONE = 1
+```
+
+</div>
+
+---
+
+# Enums - Structure, validation and introspection 🎉
+
+## Available since Python 3.4 (That's more than 10 years ago 😉)
+
+---
+
+# 📚 Basic Enums: A quick refresher
 
 ```python
 from enum import Enum
