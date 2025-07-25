@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx @marp-team/marp-cli@latest slides.md -o slides.html --engine ./engine.js --allow-local-files",
     "pdf": "npx @marp-team/marp-cli@latest slides.md --engine ./engine.js --pdf --allow-local-files",
-    "preview": "npm run build && open slides.html"
+    "preview": "PORT=8080 npx @marp-team/marp-cli@latest -s . --engine ./engine.js --html --allow-local-files"
   },
   "author": "Tsvi Mostovicz",
   "license": "MIT",

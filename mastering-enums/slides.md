@@ -18,18 +18,35 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 
 ---
 
+<!-- _backgroundImage: url('assets/tsvi-sunset-meitar.png') -->
+<!-- _backgroundSize: cover -->
+<!-- _backgroundPosition: center center -->
+
 # Bio
 
-<!-- Flags -->
-![w:80px h:50px](../assets/belgium-flag.svg) ![w:80px h:50px](../assets/israel-flag.png)
+<div class="bio-circle">
 
-<!-- Apps -->
-![w:80px h:80px](../assets/jewish-calendar.png) ![w:80px h:80px](../assets/home-assistant.png)
+<div class="bio-item" data-marpit-fragment="1">
+<img src="assets/belgium-flag.svg" alt="Belgium Flag">
+</div>
 
-<!-- Company -->
-![w:100px h:80px](../assets/intel.png)
+<div class="bio-item" data-marpit-fragment="2">
+<img src="assets/jewish-calendar.png" alt="Jewish Calendar App">
+</div>
 
-## Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
+<div class="bio-item" data-marpit-fragment="3">
+<img src="assets/home-assistant.png" alt="Home Assistant">
+</div>
+
+<div class="bio-item" data-marpit-fragment="4">
+<img src="assets/intel.png" alt="Intel">
+</div>
+
+<div class="bio-item" data-marpit-fragment="5">
+<img src="assets/icore-processor.webp" alt="Intel Core Processor">
+</div>
+
+</div>
 
 ---
 
@@ -349,12 +366,12 @@ Enums are powerful but **beware of calculation assumptions** when values aren't 
 <div style="display: flex; align-items: center; justify-content: center;">
 
 <div style="text-align: center; margin-right: 20px; margin-top: 75px;">
-<img src="../assets/linkedin-qr.png"
+<img src="assets/linkedin-qr.png"
      alt="LinkedIn QR Code"
      style="height: 150px; border: 2px solid #0077b5; border-radius: 10px;">
 <br><b>LinkedIn:</b> <a href="https://linkedin.com/in/tsvim">linkedin.com/in/tsvim</a>
 </div>
-<img src="../assets/github-qr.png"
+<img src="assets/github-qr.png"
      alt="GitHub QR Code"
      style="height: 150px; border: 2px solid #333; border-radius: 10px;">
 <div style="text-align: center; margin-left: 20px; margin-top: 75px;">

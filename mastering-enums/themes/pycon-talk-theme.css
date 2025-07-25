@@ -151,3 +151,73 @@ footer {
   font-size: 16pt;
   color: var(--subtle);
 }
+
+/* Bio slide circular layout */
+.bio-circle {
+  position: relative;
+  width: 900px;
+  height: 700px;
+  margin: 30px auto;
+}
+
+.bio-item {
+  position: absolute;
+  width: 200px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, z-index 0.3s ease;
+  border: 3px solid white;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+
+.bio-item:hover {
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+.bio-item img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+/* Position items in a circular pattern, shifted further right to avoid face */
+.bio-item:nth-child(1) { /* Belgium flag - top right, moved even further right */
+  top: 20px;
+  left: 80%;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.bio-item:nth-child(2) { /* Jewish calendar - bottom right */
+  bottom: 200px;
+  right: 20px;
+  z-index: 3;
+}
+
+.bio-item:nth-child(3) { /* Home Assistant - bottom center-right, shifted more right */
+  bottom: 140px;
+  left: 70%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.bio-item:nth-child(4) { /* Intel - right above Home Assistant, shifted more right */
+  bottom: 310px;
+  left: 65%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.bio-item:nth-child(5) { /* Intel Core Processor - positioned between Belgian flag and forehead, shifted right */
+  top: 120px;
+  left: 55%;
+  transform: translateX(-50%);
+  z-index: 6;
+  border: 4px solid #0066cc;
+}
