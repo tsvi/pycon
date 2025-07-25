@@ -23,7 +23,7 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 <!-- Company -->
 ![w:100px h:80px](../assets/intel.png)
 
-**Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel**
+## Pre-Silicon Validation (aka Verification/DV) Engineer @ Intel
 
 ---
 
@@ -226,6 +226,7 @@ print(months_until_passover(Months.ADAR))     # 9 - 6 = 3 months ✗
 <div data-marpit-fragment="1">
 
 Don't assume enum values are sequential
+
 ```python
 # ❌ BAD: Assuming sequential values
 def months_until_passover(current_month):
@@ -246,6 +247,7 @@ MONTH_POSITIONS = {
     5784: {Months.ADAR_I: 6, Months.ADAR_II: 7, Months.NISAN: 8}
 }
 ```
+
 </div>
 
 ---
@@ -255,18 +257,22 @@ MONTH_POSITIONS = {
 <div data-marpit-fragment="1">
 
 ✅ DO use when:
+
 - The behavior is intrinsic to the enum member
 - The metadata is constant and well-defined
 - You need a closed set of related constants with behavior
+
 </div>
 
 <div data-marpit-fragment="2">
 
 ❌ DON'T use when:
+
 - The behavior could change at runtime
 - You need mutable state
 - The relationship between constants is complex
 - It leads to circular dependencies
+
 </div>
 
 ---
@@ -287,16 +293,19 @@ Enums should make your code more readable, not less!
 # Real-world Applications
 
 ## Hebrew Calendar Library
+
 - **Variable month lengths** based on calculations
 - **Leap year handling** with different month sets  
 - **Sequential numbering pitfalls** with ADAR variants
 
 ## Configuration Management
+
 - **Dynamic enum creation** from JSON/YAML files
 - **Type safety** for configuration keys
 - **Runtime flexibility** with compile-time validation
 
 ## Key Takeaway
+
 Enums are powerful but **beware of calculation assumptions** when values aren't sequential!
 
 ---
@@ -334,12 +343,15 @@ Enums are powerful but **beware of calculation assumptions** when values aren't 
 <div style="display: flex; align-items: center; justify-content: center;">
 
 <div style="text-align: center; margin-right: 20px; margin-top: 75px;">
-<img src="../assets/linkedin-qr.png" style="height: 150px; border: 2px solid #0077b5; border-radius: 10px;">
+<img src="../assets/linkedin-qr.png"
+     alt="LinkedIn QR Code"
+     style="height: 150px; border: 2px solid #0077b5; border-radius: 10px;">
 <br><b>LinkedIn:</b> <a href="https://linkedin.com/in/tsvim">linkedin.com/in/tsvim</a>
 </div>
-
+<img src="../assets/github-qr.png"
+     alt="GitHub QR Code"
+     style="height: 150px; border: 2px solid #333; border-radius: 10px;">
 <div style="text-align: center; margin-left: 20px; margin-top: 75px;">
-<img src="../assets/github-qr.png" style="height: 150px; border: 2px solid #333; border-radius: 10px;">
 <br><b>GitHub:</b> <a href="https://github.com/tsvi">github.com/tsvi</a>
 </div>
 
@@ -349,8 +361,8 @@ Enums are powerful but **beware of calculation assumptions** when values aren't 
 
 # Resources
 
-- Python Enum Documentation: https://docs.python.org/3/library/enum.html
-- PEP 435 -- Adding an Enum type to the Python standard library: https://peps.python.org/pep-0435/
-- hdate library: https://github.com/py-libhdate/py-libhdate
+- Python Enum Documentation: <https://docs.python.org/3/library/enum.html>
+- PEP 435 -- Adding an Enum type to the Python standard library: <https://peps.python.org/pep-0435/>
+- hdate library: <https://github.com/py-libhdate/py-libhdate>
 - "Fluent Python" by Luciano Ramalho (covers enum patterns)
-- Real Python - Python's Enum Type: https://realpython.com/python-enum/
+- Real Python - Python's Enum Type: <https://realpython.com/python-enum/>

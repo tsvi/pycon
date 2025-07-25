@@ -4,5 +4,13 @@
     "./themes/pycon-talk-theme.css",
   ],
   "svg.preview.background": "white",
-  "markdown.marp.exportType": "html"
+  "markdown.marp.exportType": "html",
+  "cSpell.words": [
+    "Glilot",
+    "marp",
+    "marpit",
+    "Pycon",
+    "Ramalho",
+    "SHVAT"
+  ]
 }
