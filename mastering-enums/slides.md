@@ -6,9 +6,15 @@ title: Beyond Constants: Mastering Python Enums
 
 ---
 
+<div class="title-slide">
+
 # Beyond Constants: Mastering Python Enums
 
+</div>
+
+<div class="subtitle-info">
 Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
+</div>
 
 ---
 
