@@ -4,7 +4,7 @@
   "description": "Presentation materials for PyconIL 2025 talk on mastering Python enums",
   "main": "engine.js",
   "scripts": {
-    "build": "npx @marp-team/marp-cli@latest slides.md -o slides.html --engine ./engine.js --allow-local-files",
+    "build": "npx @marp-team/marp-cli@latest s --theme-set ./themes --engine ./engine.js --allow-local-files -o slides.html -- slides.md",
     "pdf": "npx @marp-team/marp-cli@latest slides.md --engine ./engine.js --pdf --allow-local-files",
     "preview": "PORT=8080 npx @marp-team/marp-cli@latest -s . --engine ./engine.js --html --allow-local-files"
   },

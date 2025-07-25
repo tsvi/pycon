@@ -6,15 +6,9 @@ title: Beyond Constants: Mastering Python Enums
 
 ---
 
-<div class="title-slide">
-
 # Beyond Constants: Mastering Python Enums
 
-</div>
-
-<div class="subtitle-info">
 Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
-</div>
 
 ---
 
@@ -52,29 +46,11 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 
 # What This Talk Is About
 
-<div data-marpit-fragment="1">
-
-- Enums: Not just glorified constants
-
-</div>
-
-<div data-marpit-fragment="2">
-
-- Adding metadata and methods to enums
-
-</div>
-
-<div data-marpit-fragment="3">
-
-- Dynamic enum creation
-
-</div>
-
-<div data-marpit-fragment="4">
-
-- The dangers of enums
-
-</div>
+* 🤔 Why Enums?
+* 📚 Basic Enums: A quick refresher
+* 🚀 Advanced Enums: Adding metadata and methods to enums
+* ⚡ Advanced Enums: Dynamic enum creation
+* ⚠️ The dangers of using enums
 
 ---
 
