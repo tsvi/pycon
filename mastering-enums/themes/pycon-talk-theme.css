@@ -140,6 +140,23 @@ footer {
   margin: 30px auto;
 }
 
+/* Fragment visibility rules for bio items */
+.bio-item[data-marpit-fragment] {
+  visibility: hidden;
+}
+
+/* Show fragments when they become active */
+.bio-item[data-marpit-fragment="current"],
+.bio-item[data-bespoke-marp-fragment="active"],
+.bio-item[data-bespoke-marp-fragment="current"] {
+  visibility: visible;
+}
+
+/* Handle different fragment states */
+.bio-item[data-bespoke-marp-fragment="inactive"] {
+  visibility: hidden;
+}
+
 .bio-item {
   position: absolute;
   width: 200px;
