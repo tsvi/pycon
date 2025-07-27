@@ -3,6 +3,7 @@
 marp: true
 theme: pycon-talk-theme
 title: Beyond Constants: Mastering Python Enums
+paginate: true
 
 ---
 
@@ -54,25 +55,82 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 
 ---
 
-# 🤔 Why Enums?
+# 🤔 Why Enums - a historical recap (1/4)
 
-* Raw values: `status = 1`
-* Constants: `DONE = 1` - avoid typos
+## We started with raw values
 
-<div data-marpit-fragment="3">
+```python --no-line-number
+if status == 1:
+   print("Done!")
+   ...
+```
 
-- Grouped constants - related values
+---
+
+# 🤔 Why Enums - a historical recap (2/4)
+
+## Make our code readable
+
+```python --no-line-number
+if status == "DONE":
+   print("Done!")
+   ...
+```
+
+---
+
+# 🤔 Why Enums - a historical recap (3/4)
+
+## Let's use constants to avoid typos
+
+```python --no-line-number
+DONE = "done"
+
+if status == DONE:
+   print("Done!")
+   ...
+```
+
+---
+
+# 🤔 Why Enums - a historical recap (4/4)
+
+## We should group the related constants
 
 ```python --no-line-number
 class Status:
     DONE = 1
-```
+    ERROR = 2
 
-</div>
+if status == Status.DONE:
+   print("Done!")
+   ...
+```
 
 ---
 
-# Enums - Structure, validation and introspection 🎉
+# Enums: Add validation
+
+```python --no-line-number
+class Status(Enum):
+    DONE = 1
+    ERROR = 2
+
+value = Status(1)    # ✅ Works
+value = Status(5)    # ❌ Error - not  a valid status
+```
+
+---
+
+# ... and introspection 🎉
+
+```python --no-line-number
+>>> [x.name for x in Status]
+['DONE', 'ERROR']
+
+>>> [x.value for x in Status]
+[1, 2]
+```
 
 ## Available since Python 3.4 (That's more than 10 years ago 😉)
 
