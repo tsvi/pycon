@@ -157,25 +157,19 @@ print(Color.RED.value)  # 1
 # Adding Metadata to Enums
 
 ```python
-from enum import IntEnum
-
-class Months(IntEnum):
+class Months(Enum):
     TISHREI = 1, 30
-    MARCHESHVAN = 2, lambda year: 30 if long_cheshvan(year) else 29
-    KISLEV = 3, lambda year: 30 if not short_kislev(year) else 29
-    ADAR = 6, 29  # Regular year
-    ADAR_I = 7, 30  # Leap year first Adar  
-    ADAR_II = 8, 29  # Leap year second Adar
+    TEVET = 4, 29
     
-    def __new__(cls, value, days):
-        obj = int.__new__(cls, value)
+    def __new__(cls, value, length):
+        obj = object.__new__(cls, value)
         obj._value_ = value
-        obj.length = days
+        obj.length = length
         return obj
 
 # Usage
 print(Months.TISHREI.length)     # 30
-print(Months.ADAR.value)         # 6
+print(Months.TEVET.value)         # 4
 ```
 
 ---
@@ -183,58 +177,21 @@ print(Months.ADAR.value)         # 6
 # Adding Methods to Enums
 
 ```python
-class Months(IntEnum):
-    TISHREI = 1, 30
-    MARCHESHVAN = 2, lambda year: 30 if long_cheshvan(year) else 29
-    KISLEV = 3, lambda year: 30 if not short_kislev(year) else 29
-    ADAR = 6, 29
-    # ... other months
-    
-    def __new__(cls, value, days):
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj.length = days
-        return obj
-    
-    def days(self, year=None):
-        """Return the number of days in this month."""
-        if callable(self.length):
-            return self.length(year)
-        return self.length
+class Months(Enum):
+
+    def next_month(self, year) -> Months:
+        """Return the next month."""
+        if self == Months.ELUL:
+            return Months.TISHREI
+        if self in {Months.ADAR, Months.ADAR_II}:
+            return Months.NISAN
+        if is_leap_year(year) and self == Months.SHVAT:
+            return Months.ADAR_I
+        return Months(self._value_ + 1)
 
 # Usage
-print(Months.TISHREI.days())           # 30
-print(Months.MARCHESHVAN.days(5784))   # 30 (long Cheshvan in this year)
-```
-
----
-
-# Real-world Example: Hebrew Calendar
-
-```python
-class Months(IntEnum):
-    TISHREI = 1, 30
-    MARCHESHVAN = 2, lambda year: 30 if long_cheshvan(year) else 29
-    KISLEV = 3, lambda year: 30 if not short_kislev(year) else 29
-    ADAR = 6, 29  # Regular year
-    ADAR_I = 7, 30  # Leap year first Adar
-    ADAR_II = 8, 29  # Leap year second Adar
-    # ... other months
-
-    def __new__(cls, value, days):
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj.length = days
-        return obj
-
-    def days(self, year=None):
-        if callable(self.length):
-            return self.length(year)
-        return self.length
-
-# Usage
-print(Months.MARCHESHVAN.days(5785))  # 30 (long Cheshvan)
-print(Months.KISLEV.days(5785))       # 29 (short Kislev)
+print(Months.ELUL.next_month())        # TISHREI
+print(Months.SHVAT.next_month(5784))   # ADAR_I
 ```
 
 ---
