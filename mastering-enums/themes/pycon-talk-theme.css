@@ -49,6 +49,7 @@ code {
   background-color: var(--color-code-bg);
   padding: 0.2rem 0.4rem;
   border-radius: 3px;
+  font-size: 0.75em;
 }
 
 pre {
@@ -56,6 +57,7 @@ pre {
   padding: 1rem;
   border-radius: 5px;
   overflow: auto;
+  font-size: 0.75em;
 }
 
 .image-container {
