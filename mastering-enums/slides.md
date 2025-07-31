@@ -202,26 +202,6 @@ ValueError: 15 is not a valid Months
 
 ---
 
-# Adding Attributes to Enums
-
-```python
-class Months(Enum):
-    TISHREI = 1, 30
-    TEVET = 4, 29
-    
-    def __new__(cls, value, length):
-        obj = object.__new__(cls, value)
-        obj._value_ = value
-        obj._length = length
-        return obj
-
-# Usage
-print(Months.TISHREI._length)     # 30
-print(Months.TEVET.value)         # 4
-```
-
----
-
 # Adding Methods to Enums
 
 ```python
@@ -244,7 +224,27 @@ print(Months.SHVAT.next_month(5784))   # ADAR_I
 
 ---
 
-# Creating variable attributes
+# Adding Attributes to Enums
+
+```python
+class Months(Enum):
+    TISHREI = 1, 30
+    TEVET = 4, 29
+    
+    def __new__(cls, value, length):
+        obj = object.__new__(cls, value)
+        obj._value_ = value
+        obj._length = length
+        return obj
+
+# Usage
+print(Months.TISHREI._length)     # 30
+print(Months.TEVET.value)         # 4
+```
+
+---
+
+# Creating dynamic attributes
 
 ```python
 class Months(Enum):
@@ -307,7 +307,8 @@ def get_config(key):
 
 * Use `.value` when comparing to `int`/`str`
 * OR use `StrEnum` and `IntEnum`
-* When using enums in heavily used methods (think `__eq__`), consider using `.value` comparisons for a performance boost
+* When using enums in heavily used methods (think `__eq__`), consider using `.value`
+  comparisons for a performance boost
 
 ---
 
@@ -359,7 +360,6 @@ Enums should make your code more readable, not less!
 
 ---
 
-
 # Resources
 
 - Python Enum Documentation: <https://docs.python.org/3/library/enum.html>
@@ -373,12 +373,14 @@ Enums should make your code more readable, not less!
 <div style="display: flex; align-items: center; justify-content: center;">
 
 <div style="text-align: center; margin-right: 75px; margin-top: 75px;">
-<img src="assets/linkedin-qr.png" style="height: 250px; border: 2px solid #0077b5; border-radius: 10px;">
+<img src="assets/linkedin-qr.png" alt="LinkedIn QR Code" style="height: 250px;
+     border: 2px solid #0077b5; border-radius: 10px;">
 <br><b>LinkedIn:</b> <a href="https://linkedin.com/in/tsvim">linkedin.com/in/tsvim</a>
 </div>
 
 <div style="text-align: center; margin-left: 75px; margin-top: 75px;">
-<img src="assets/github-qr.png" style="height: 250px; border: 2px solid #333; border-radius: 10px;">
+<img src="assets/github-qr.png" alt="GitHub QR Code" style="height: 250px;
+     border: 2px solid #333; border-radius: 10px;">
 <br><b>GitHub:</b> <a href="https://github.com/tsvi">github.com/tsvi</a>
 </div>
 
