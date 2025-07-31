@@ -26,11 +26,11 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 </div>
 
 <div class="bio-item" data-marpit-fragment="2">
-<img src="assets/jewish-calendar.png" alt="Jewish Calendar App">
+<img src="assets/home-assistant.png" alt="Home Assistant">
 </div>
 
 <div class="bio-item" data-marpit-fragment="3">
-<img src="assets/home-assistant.png" alt="Home Assistant">
+<img src="assets/jewish-calendar.png" alt="Jewish Calendar App">
 </div>
 
 <div class="bio-item" data-marpit-fragment="4">
@@ -47,110 +47,162 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 
 # What This Talk Is About
 
-* 🤔 Why Enums?
-* 📚 Basic Enums: A quick refresher
-* 🚀 Advanced Enums: Adding metadata and methods to enums
-* ⚡ Advanced Enums: Dynamic enum creation
-* ⚠️ The dangers of using enums
+<div data-marpit-fragment="1">
+Two development stories ...
+</div>
+
+* 📅 The hdate library
+* 💻 An internal Intel library (with all the secret sauce taken out 😉)
+
+<div data-marpit-fragment="2">
+... in 3 parts
+</div>
+
+* How Enums improved our code
+* Cool tricks
+* 🍕 The late night debugging of our own stupidity
 
 ---
 
-# 🤔 Why Enums - a historical recap (1/4)
+# Part I - The story of the hdate library
 
-## We started with raw values
+## Or "Why should I use Enums? 🤔"
+
+---
+
+# This month shall the start of the months
+
+The hdate library started off as a python port of some C-code back in April 2016.
+
+<div data-marpit-fragment="1">
 
 ```python --no-line-number
-if status == 1:
-   print("Done!")
+>>> from datetime import date
+
+>>> today = HDate(date.today())
+>>> today.get_hebrew_date()
+(2, 11, 5785)  # 2nd of Av, 5785
 ```
+
+</div>
 
 ---
 
-# 🤔 Why Enums - a historical recap (2/4)
+# So what month are we in?
 
-## Make our code readable
+<div data-marpit-fragment="1">
+
+Using numbers is not very user friendly to the user
+
+</div>
+
+<div data-marpit-fragment="1">
 
 ```python --no-line-number
-if status == "DONE":
-   print("Done!")
+MONTH_TABLE = {"english": ["Tishrei", "Cheshvan", ...]}
+
+class HDate:
+
+    def __str__(self):
+        return hebrew_date_str(day, month, year, language="hebrew")
+
+def hebrew_date_str(day, month, year, language):
+    month_str = MONTH_TABLE[language][month]
 ```
+
+</div>
 
 ---
 
-# 🤔 Why Enums - a historical recap (3/4)
+# But what about the programmer?
 
-## Let's use constants to avoid typos
+<div data-marpit-fragment="1">
+
+Guess what the following does?
 
 ```python --no-line-number
-DONE = "done"
-
-if status == DONE:
-   print("Done!")
+    if date.month == 13:
+        month = 6
+    if date.month == 14:
+        month = 6
+        day += 30
 ```
+
+</div>
 
 ---
 
-# 🤔 Why Enums - a historical recap (4/4)
+# Even better: debugging test code 😈
 
-## We should group the related constants
+A snippet from our tests codebase from 6 years ago
 
 ```python --no-line-number
-class Status:
-    DONE = 1
-    ERROR = 2
-
-if status == Status.DONE:
-   print("Done!")
+@pytest.mark.parametrize(("date", "holiday"), [
+    ((21, 7), "pesach_vii"),
+    ((6, 9), "shavuot"),
+    ((25, 3), "chanukah"),
+])
+def test_holidays(date, holiday):
+    ...
 ```
+
+<div data-marpit-fragment="2">
+
+Not really friendly when debugging. 😩
+
+</div>
 
 ---
 
-# Enums: Add validation
+# Hey, we should use enums 💡
+
+A month is literally an enumerated type
+
+<div data-marpit-fragment="1">
 
 ```python --no-line-number
-class Status(Enum):
-    DONE = 1
-    ERROR = 2
+class Months(Enum):
 
-value = Status(1)    # ✅ Works
-value = Status(5)    # ❌ Error - not  a valid status
+    TISHREI = auto()
+    CHESHVAN = auto()
+    KISLEV = auto()
+    TEVET = auto()
 ```
+
+</div>
 
 ---
 
-# ... and introspection 🎉
+# And we get free goodies 🍺
+
+<div data-marpit-fragment="1">
+
+Validation ...
 
 ```python --no-line-number
->>> [x.name for x in Status]
-['DONE', 'ERROR']
-
->>> [x.value for x in Status]
-[1, 2]
+>>> month = Months(15)
+ValueError: 15 is not a valid Months
 ```
 
-## Available since Python 3.4 (That's more than 10 years ago 😉)
+</div>
+
+<div data-marpit-fragment="2">
+... and introspection 🎉
+
+```python --no-line-number
+>>> [x.name for x in Months]
+[TISHREI, CHESHVAN, ...]
+```
+
+</div>
 
 ---
 
-# 📚 Basic Enums: A quick refresher
-
-```python
-from enum import Enum
-
-class Color(Enum):
-    RED = 1
-    GREEN = 2
-    BLUE = 3
-
-# Usage
-print(Color.RED)        # Color.RED
-print(Color.RED.name)   # RED
-print(Color.RED.value)  # 1
-```
+# Available since Python 3.4 (That's more than 10 years ago 😉)
 
 ---
 
-# Adding Metadata to Enums
+# Adding Attributes to Enums
 
 ```python
 class Months(Enum):
@@ -160,11 +212,11 @@ class Months(Enum):
     def __new__(cls, value, length):
         obj = object.__new__(cls, value)
         obj._value_ = value
-        obj.length = length
+        obj._length = length
         return obj
 
 # Usage
-print(Months.TISHREI.length)     # 30
+print(Months.TISHREI._length)     # 30
 print(Months.TEVET.value)         # 4
 ```
 
@@ -192,6 +244,26 @@ print(Months.SHVAT.next_month(5784))   # ADAR_I
 
 ---
 
+# Creating variable attributes
+
+```python
+class Months(Enum):
+    MARCHESHVAN = 2, lambda year: 30 if long_cheshvan(year) else 29
+    KISLEV = 3, lambda year: 30 if not short_kislev(year) else 29
+
+    def length(self, year = None):
+        """Return the number of days in this month."""
+        if callable(self._length):
+            return self._length(year)
+        return self._length
+```
+
+---
+
+# Part II - Creating Enums dynamically
+
+---
+
 # Dynamic Enum Creation
 
 ```python
@@ -213,7 +285,7 @@ def get_config(key):
 
 ---
 
-# ⚠️ The dangers of using enums
+# ⚠️ The pitfalls of using enums
 
 ---
 
@@ -225,18 +297,32 @@ def get_config(key):
 
 ---
 
+# Complexity
+
+## Hard to extend
+
+* Although using dynamic enums can help
+
+## Comparison issues
+
+* Use `.value` when comparing to `int`/`str`
+* OR use `StrEnum` and `IntEnum`
+* When using enums in heavily used methods (think `__eq__`), consider using `.value` comparisons for a performance boost
+
+---
+
 # Examples
 
 ---
 
-# When to Use Enhanced Enums
+# When to Use Enums with attributes
 
 <div data-marpit-fragment="1">
 
 ✅ DO use when:
 
 - The behavior is intrinsic to the enum member
-- The metadata is constant and well-defined
+- The attributes are well-defined
 - You need a closed set of related constants with behavior
 
 </div>
@@ -253,6 +339,13 @@ def get_config(key):
 
 ---
 
+# When to use dynamic enums
+
+* The information changes every time the code is run
+* It does **NOT** need to change during the run
+
+---
+
 <div style="font-style: italic; font-size: 1.2em; color: #5C4D7D;">
 
 > "Simple is better than complex. Complex is better than complicated."
@@ -266,18 +359,12 @@ Enums should make your code more readable, not less!
 
 ---
 
-# Real-world Applications
 
-## Hebrew Calendar Library
+# Resources
 
-- **Variable month lengths** based on calculations
-- **Leap year handling** with different month sets  
-
-## Configuration Management
-
-- **Dynamic enum creation** from JSON/YAML files
-- **Type safety** for configuration keys
-- **Runtime flexibility** with compile-time validation
+- Python Enum Documentation: <https://docs.python.org/3/library/enum.html>
+- PEP 435 -- Adding an Enum type to the Python standard library: <https://peps.python.org/pep-0435/>
+- hdate library: <https://github.com/py-libhdate/py-libhdate>
 
 ---
 
@@ -285,13 +372,13 @@ Enums should make your code more readable, not less!
 
 <div style="display: flex; align-items: center; justify-content: center;">
 
-<div style="text-align: center; margin-right: 20px; margin-top: 75px;">
-<img src="assets/linkedin-qr.png" style="height: 150px; border: 2px solid #0077b5; border-radius: 10px;">
+<div style="text-align: center; margin-right: 75px; margin-top: 75px;">
+<img src="assets/linkedin-qr.png" style="height: 250px; border: 2px solid #0077b5; border-radius: 10px;">
 <br><b>LinkedIn:</b> <a href="https://linkedin.com/in/tsvim">linkedin.com/in/tsvim</a>
 </div>
 
-<div style="text-align: center; margin-left: 20px; margin-top: 75px;">
-<img src="assets/github-qr.png" style="height: 150px; border: 2px solid #333; border-radius: 10px;">
+<div style="text-align: center; margin-left: 75px; margin-top: 75px;">
+<img src="assets/github-qr.png" style="height: 250px; border: 2px solid #333; border-radius: 10px;">
 <br><b>GitHub:</b> <a href="https://github.com/tsvi">github.com/tsvi</a>
 </div>
 
