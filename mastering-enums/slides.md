@@ -385,11 +385,3 @@ Enums should make your code more readable, not less!
 </div>
 
 </div>
-
----
-
-# Resources
-
-- Python Enum Documentation: <https://docs.python.org/3/library/enum.html>
-- PEP 435 -- Adding an Enum type to the Python standard library: <https://peps.python.org/pep-0435/>
-- hdate library: <https://github.com/py-libhdate/py-libhdate>
