@@ -202,7 +202,63 @@ ValueError: 15 is not a valid Months
 
 ---
 
-# Adding Methods to Enums
+# Iterating over dates
+
+<div data-marpit-fragment="1">
+
+🎯 Our goal:
+
+```python --no-line-number
+
+HebrewDate(5785, Months.AV, 7) + timedelta(days=35)
+
+```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+📃 Requirements:
+
+- Get the months length
+- Get the next month
+
+</div>
+
+---
+
+# Enums are iterable
+
+<div data-marpit-fragment="1">
+
+```python --no-line-number
+>>> [x.name for x in Months]
+[TISHREI, CHESHVAN, ...]
+```
+
+</div>
+
+<div data-marpit-fragment="2">
+But how to deal with leap years? 🤔
+
+```python --no-line-number
+[..., SHVAT, ADAR, ADAR_I, ADAR_II, NISSAN, ...]
+```
+
+</div>
+
+<div data-marpit-fragment="3">
+Or next year? 🍏🍯
+
+```python --no-line-number
+[..., AV, ELUL]
+```
+
+</div>
+
+---
+
+# Enums are classes (and can have methods)
 
 ```python
 class Months(Enum):
@@ -224,7 +280,7 @@ print(Months.SHVAT.next_month(5784))   # ADAR_I
 
 ---
 
-# Adding Attributes to Enums
+# ... and even attributes
 
 ```python
 class Months(Enum):
@@ -244,7 +300,7 @@ print(Months.TEVET.value)         # 4
 
 ---
 
-# Creating dynamic attributes
+# ... which can be dynamic
 
 ```python
 class Months(Enum):
