@@ -318,88 +318,271 @@ class Months(Enum):
 
 # Part II - Creating Enums dynamically
 
+## Or "What happens when your enum values come from a config file? 🤔"
+
 ---
 
-# Dynamic Enum Creation
+# The Intel story: Configuration nightmare 😱
+
+<div data-marpit-fragment="1">
+
+We had YAML configs with product-specific settings:
+
+```yaml
+# feature_config.yaml
+features:
+  - name: "turbo_boost"
+    enabled: true
+    valid_for: ["SERVER", "CLIENT"]  # Only some products
+  
+  - name: "power_saving"
+    enabled: false
+    valid_for: ["MOBILE"]
+    
+  - name: "debug_mode"
+    enabled: true
+    # No valid_for = applies to all products
+```
+
+</div>
+
+<div data-marpit-fragment="2">
 
 ```python
-with open("config.json") as f:
-    config_data = json.load(f)
-
-ConfigEnum = StrEnum("ConfigEnum", config_data)
-
-# Example config.json:
-# {"SERVER": "product_a", "CLIENT": "product_b"}
-
-# Usage
-print(ConfigEnum.SERVER.value)  # "product_a"
-
-# Type-safe access
-def get_config(key):
-    return ConfigEnum[key]  # Raises KeyError if invalid
+@dataclass
+class FeatureConfig:
+    name: str
+    enabled: bool
+    valid_for: List[str] = field(default_factory=list)  # Empty = all products
 ```
+
+</div>
+
+---
+
+# The problem: Runtime configuration chaos
+
+<div data-marpit-fragment="1">
+
+```python --no-line-number
+def apply_feature(feature_config, current_product):
+    if feature_config.valid_for:
+        if current_product in feature_config.valid_for:
+            return enable_feature(feature_config.name)
+        return None
+    return enable_feature(feature_config.name)  # Valid for all
+
+# But what if YAML contains typos?
+# valid_for: ["SEVER", "CLIENT"]  # 😱 Typo! SEVER != SERVER
+```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+**Problems:**
+
+- 🐛 YAML typos cause silent failures
+- ❓ No validation of product names at config load time  
+- 🔧 Features silently ignored for "invalid" products
+
+</div>
+
+---
+
+# Solution: Dynamic Enum Creation
+
+## Step 1: Load valid products from deployment config
+
+<div data-marpit-fragment="1">
+
+```python --no-line-number
+import yaml
+from enum import StrEnum
+
+# Load project configuration
+with open("project_config.yaml") as f:
+    project_config = yaml.safe_load(f)
+
+project_products = project_config["valid_products"]
+# ["SERVER", "CLIENT", "MOBILE"]
+
+ProductEnum = StrEnum("ProductEnum", project_products)
+```
+
+</div>
+
+---
+
+# Solution: Dynamic Enum Creation
+
+## Step 2: Validate YAML against enum
+
+<div data-marpit-fragment="1">
+
+```python --no-line-number
+@dataclass  
+class FeatureConfig:
+    name: str
+    enabled: bool
+    valid_for: List[ProductEnum] = field(default_factory=list)
+    
+    def __post_init__(self):
+        # Convert strings to enum members, validate automatically!
+        self.valid_for = [ProductEnum(p) for p in self.valid_for]
+        # Raises ValueError if invalid product name!
+```
+
+</div>
 
 ---
 
 # ⚠️ The pitfalls of using enums
 
----
-
-# Singletons
-
-* These are *NOT* your regular classes
-* Changing attributes will cause changes to propagate everywhere
-* Think internal methods, tests and maybe more
+## Or "How we learned not to do stupid stuff the hard way 🤦‍♂️"
 
 ---
 
-# Complexity
-
-## Hard to extend
-
-* Although using dynamic enums can help
-
-## Comparison issues
-
-* Use `.value` when comparing to `int`/`str`
-* OR use `StrEnum` and `IntEnum`
-* When using enums in heavily used methods (think `__eq__`), consider using `.value`
-  comparisons for a performance boost
-
----
-
-# Examples
-
----
-
-# When to Use Enums with attributes
+# Pitfall #1: Enums are singletons!
 
 <div data-marpit-fragment="1">
 
-✅ DO use when:
+```python --no-line-number
+class Months(Enum):
+    TISHREI = 1
+    CHESHVAN = 2
+    # ...
+    
+    def set_language(self, lang):
+        self.display_language = lang  # 😱 BAD!
 
-- The behavior is intrinsic to the enum member
-- The attributes are well-defined
+# In one part of code:
+Months.TISHREI.set_language("hebrew")
+
+# In another part:
+print(Months.TISHREI.display_language)  # Still "hebrew"!
+# This affects ALL instances of Months.TISHREI everywhere!
+```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+**The problem:** You changed ALL instances of that enum member across your entire application! 🔥
+
+</div>
+
+---
+
+# Pitfall #2: Test pollution
+
+<div data-marpit-fragment="1">
+
+```python --no-line-number
+class Status(Enum):
+    PENDING = "pending"
+    COMPLETE = "complete"
+    
+    def mark_as_seen(self):
+        self._seen = True  # 😱 Modifying enum state
+
+def test_status_workflow():
+    Status.PENDING.mark_as_seen()
+    assert Status.PENDING._seen == True  # ✅ Pass
+
+def test_fresh_status():
+    # This test runs after the first one
+    assert not hasattr(Status.PENDING, '_seen')  # ❌ Fail!
+    # Status.PENDING still has _seen=True from previous test!
+```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+**The lesson:** Tests started failing randomly depending on execution order! 🎲
+
+</div>
+
+---
+
+# Pitfall #3: Complex inheritance gone wrong
+
+<div data-marpit-fragment="1">
+
+```python --no-line-number
+class BaseConfig(Enum):
+    def validate(self):
+        # Complex validation logic here
+        pass
+
+class DatabaseConfig(BaseConfig):  # 😱 This gets complicated fast
+    MYSQL = "mysql://localhost"
+    POSTGRES = "postgres://localhost"
+    
+    def connect(self):
+        # Database connection logic
+        # But what if validation fails?
+        # How do you handle different DB types?
+        # Suddenly your enum is doing too much!
+```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+**Better approach:** Keep enums simple, use composition instead of complex inheritance
+
+</div>
+
+---
+
+# When to Use Enhanced Enums
+
+<div data-marpit-fragment="1">
+
+✅ **DO use enums with methods/attributes when:**
+
+- The behavior belongs to the enum member (like `month.days()`)
+- The data is constant and well-defined (like month lengths)  
 - You need a closed set of related constants with behavior
 
 </div>
 
 <div data-marpit-fragment="2">
 
-❌ DON'T use when:
+❌ **DON'T use enums when:**
 
-- The behavior could change at runtime
-- You need mutable state
-- The relationship between constants is complex
+- You need to modify state during runtime (use regular classes)
+- The behavior depends on external context (pass context as parameters)
+- You have complex inheritance needs (composition > inheritance)
 
 </div>
 
 ---
 
-# When to use dynamic enums
+# When to Use Dynamic Enums
 
-* The information changes every time the code is run
-* It does **NOT** need to change during the run
+<div data-marpit-fragment="1">
+
+✅ **Perfect for:**
+
+- Configuration that changes between deployments/projects
+- API endpoints that vary by environment  
+- Product SKUs that differ by region
+- Feature flags loaded from external systems
+
+</div>
+
+<div data-marpit-fragment="2">
+
+❌ **Not suitable for:**
+
+- Values that change during program execution
+- Data that needs complex validation logic
+- Highly nested or structured configuration
+
+</div>
 
 ---
 
