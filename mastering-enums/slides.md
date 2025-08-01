@@ -390,9 +390,7 @@ def apply_feature(feature_config, current_product):
 
 ---
 
-# Solution: Dynamic Enum Creation
-
-## Step 1: Load valid products from deployment config
+# Load project configuration from YAML
 
 <div data-marpit-fragment="1">
 
@@ -414,9 +412,7 @@ ProductEnum = StrEnum("ProductEnum", project_products)
 
 ---
 
-# Solution: Dynamic Enum Creation
-
-## Step 2: Validate YAML against enum
+# Validate feature configs against enum
 
 <div data-marpit-fragment="1">
 
@@ -537,50 +533,88 @@ class DatabaseConfig(BaseConfig):  # 😱 This gets complicated fast
 
 ---
 
-# When to Use Enhanced Enums
+# When to Use Enhanced Enums ✅
 
 <div data-marpit-fragment="1">
 
-✅ **DO use enums with methods/attributes when:**
+**DO use enums with methods/attributes when:**
 
 - The behavior belongs to the enum member (like `month.days()`)
 - The data is constant and well-defined (like month lengths)  
 - You need a closed set of related constants with behavior
 
-</div>
-
-<div data-marpit-fragment="2">
-
-❌ **DON'T use enums when:**
-
-- You need to modify state during runtime (use regular classes)
-- The behavior depends on external context (pass context as parameters)
-- You have complex inheritance needs (composition > inheritance)
+```python --no-line-number
+class HttpStatus(Enum):
+    OK = 200
+    NOT_FOUND = 404
+    
+    def is_success(self):
+        return 200 <= self.value < 300  # ✅ Behavior belongs to status
+```
 
 </div>
 
 ---
 
-# When to Use Dynamic Enums
+# When NOT to Use Enhanced Enums ❌
 
 <div data-marpit-fragment="1">
 
-✅ **Perfect for:**
+**DON'T use enums when:**
+
+- You need to modify state during runtime (use regular classes)
+- The behavior depends on external context (pass context as parameters)
+- You have complex inheritance needs (composition > inheritance)
+
+```python --no-line-number
+class UserStatus(Enum):
+    ACTIVE = "active"
+    
+    def set_last_login(self, timestamp):  # 😱 BAD! 
+        self.last_login = timestamp  # Modifies singleton state
+```
+
+</div>
+
+---
+
+# When to Use Dynamic Enums ✅
+
+<div data-marpit-fragment="1">
+
+**Perfect for:**
 
 - Configuration that changes between deployments/projects
 - API endpoints that vary by environment  
 - Product SKUs that differ by region
 - Feature flags loaded from external systems
 
+```python --no-line-number
+# Environment-specific API endpoints
+api_config = {"DEV": "dev.api.com", "PROD": "api.com"}
+ApiEndpoints = StrEnum("ApiEndpoints", api_config)  # ✅ Good!
+```
+
 </div>
 
-<div data-marpit-fragment="2">
+---
 
-❌ **Not suitable for:**
+# When NOT to Use Dynamic Enums ❌
+
+<div data-marpit-fragment="1">
+
+**Not suitable for:**
 
 - Values that change during program execution
 - Data that needs complex validation logic
 - Highly nested or structured configuration
+
+```python --no-line-number
+# User preferences that change during runtime
+user_prefs = {"theme": "dark", "language": "en"}
+UserPrefs = StrEnum("UserPrefs", user_prefs)  # 😱 BAD!
+# What happens when user changes theme to "light"?
+```
 
 </div>
 
