@@ -196,7 +196,9 @@ HebrewDate(5785, Months.AV, 7) + timedelta(days=35)
 
 ---
 
-```python highlight:6,14
+# A simplified `__add__` method
+
+```python highlight:6,9
 def __add__(self, other: timedelta):
     _year, _month, _day = self.year, self.month, self.day
     days_remaining = other.days
@@ -204,13 +206,9 @@ def __add__(self, other: timedelta):
     while days_remaining > 0:
         days_left_in_month = get_month_length(_month, _year) - ...
 
-        if days_remaining < days_left_in_month:
-        else:
-            
-            if _month == Months.ELUL:
-                ...
-            else:
-                _month = get_next_month(_month, _year)
+        if days_remaining > days_left_in_month:
+            _month = get_next_month(_month, _year)
+            ...
     
     return HebrewDate(_year, _month, _day)
 ```
@@ -277,130 +275,75 @@ class Months(Enum):
 
 ---
 
-# The Intel story: multi-product configurations
-
-<div data-marpit-fragment="1">
-
-Project configuration:
-
-```yaml --no-line-number
-product_mapping:
-  - SERVER: server_process_x
-  - CLIENT: client_process_y, client_process_z
-```
-
-</div>
-
----
-
-# YAML config with product-specific settings
-
-<div data-marpit-fragment="1">
+# The (simplified) Intel story: A YAML config with product-specific settings
 
 ```yaml
 - name: "feature_a"
-  enabled: true
-  products: ["CLIENT"] # All client products
+  products: ["process_y"]
 
 - name: "feature_b"
-  enabled: false
-  products: ["server_process_x"] # Only a specific SERVER product
+  products: ["process_x"]
   
-- name: "debug_mode"
-  enabled: true
-  # No products = applies to all products
+- name: "debug_mode" # No products -> ALL
 ```
-
-</div>
 
 ---
 
-# ... mapped at runtime to a dataclass
+# Problem 🤔
+
+- 📝 Large changes when the manufacturing process changes
+- 🐛 Typos in YAML cause silent failures (Non-existent `process_z`)
+
+---
+
+# Solution⚡
 
 <div data-marpit-fragment="1">
 
-```python --no-line-number
-@dataclass
-class FeatureConfig:
-    name: str
-    enabled: bool
-    products: list[str] = field(default_factory=list)
+Create a project configuration ...
+
+```yaml --no-line-number
+products:
+  - SERVER: process_x
+  - CLIENT: process_y
 ```
 
 </div>
-
----
-
-# Manually resolve product groups
 
 <div data-marpit-fragment="2">
 
-```python --no-line-number
-def get_products_for_feature(feature_config, all_products):
-    """Determine which actual products a feature applies to."""
-
-    if not feature_config.products:
-        return [p for p_list in all_products.values() for p in p_list]
-    
-    applicable_products = []
-
-    for product_name in feature_config.products:
-        if product_name in all_product.keys(): # Check if product is a group name
-            applicable_products.extend([p for p in all_products[product_name]])
-        applicable_products.extend(product_name)
-    
-    return applicable_products
-```
-
-</div>
-
----
-
-# Problems
-
-- 🐛 YAML typos cause silent failures (`SEVER` != `SERVER`)
-- ❓ No validation of product names at config load time  
-- 🔧 Features silently ignored for "invalid" products
-
----
-
-# Load project configuration from YAML
-
-<div data-marpit-fragment="1">
+... mapped at runtime to an Enum:
 
 ```python --no-line-number
-import yaml
-from enum import StrEnum
-
-# Load project configuration
-with open("project_config.yaml") as f:
+with open("config.yaml") as f:
     project_config = yaml.safe_load(f)
 
-project_products = project_config["valid_products"]
-# ["SERVER", "CLIENT", "MOBILE"]
-
-ProductEnum = StrEnum("ProductEnum", project_products)
+mapping = project_config["products"]
+ProcessConfig = StrEnum("ProcessConfig", mapping)
 ```
 
 </div>
 
 ---
 
-# Validate feature configs against enum
+# A more streamlined approach
 
 <div data-marpit-fragment="1">
+⭐ Automatic validation of process names
+</div>
 
-```python --no-line-number
-@dataclass  
-class FeatureConfig:
-    name: str
-    enabled: bool
-    valid_for: List[ProductEnum] = field(default_factory=list)
-    
-    def __post_init__(self):
-        # Convert strings to enum members, validate automatically!
-        self.valid_for = [ProductEnum(p) for p in self.valid_for]
-        # Raises ValueError if invalid product name!
+<div data-marpit-fragment="2">
+⭐ No need to change YAML configuration in multiple locations
+</div>
+</br>
+<div data-marpit-fragment="3">
+
+```python --no-line-number --title:"🤩 Bonus: type-safety throughout our code"
+
+@dataclass
+class Features:
+
+    processes: list[ProcessConfig]
 ```
 
 </div>
@@ -413,95 +356,93 @@ class FeatureConfig:
 
 ---
 
-# Pitfall #1: Enums are singletons!
+# Pitfall #1: Changing an Enums attribute affects ALL instances of that Enum's attribute!
 
-<div data-marpit-fragment="1">
+---
+
+# Example #1: setting the language
+
+```python
+@dataclass
+class HebrewDate:
+
+    _language: str = "en"
+
+    def __post_init__(self, ...):
+        self.month.set_language(self._language)
+
+today = HebrewDate(5785, Months.ELUL, 7)
+today.set_language("he") # -> ז אלול תשפ"ה
+
+# Forgot to set the language? Tomorrow's month is also in Hebrew
+tomorrow = HebrewDate(5785, Months.ELUL, 8)
+```
+
+---
+
+# Example #2: Test pollution
 
 ```python --no-line-number
+class ComparisonMode(Enum):
+
+    STRICT = auto()
+    ADAR_IS_ADAR_I = auto()
+    ADAR_IS_ADAR_II = auto()
+    ADAR_IS_ANY = auto()
+    
 class Months(Enum):
-    TISHREI = 1
-    CHESHVAN = 2
-    # ...
-    
-    def set_language(self, lang):
-        self.display_language = lang  # 😱 BAD!
 
-# In one part of code:
-Months.TISHREI.set_language("hebrew")
-
-# In another part:
-print(Months.TISHREI.display_language)  # Still "hebrew"!
-# This affects ALL instances of Months.TISHREI everywhere!
+    def set_comparison_mode(self):
+        ...
 ```
-
-</div>
-
-<div data-marpit-fragment="2">
-
-**The problem:** You changed ALL instances of that enum member across your entire application! 🔥
-
-</div>
 
 ---
 
-# Pitfall #2: Test pollution
+# Tests randomly fail (dependant on execution order)
 
 <div data-marpit-fragment="1">
 
 ```python --no-line-number
-class Status(Enum):
-    PENDING = "pending"
-    COMPLETE = "complete"
-    
-    def mark_as_seen(self):
-        self._seen = True  # 😱 Modifying enum state
 
-def test_status_workflow():
-    Status.PENDING.mark_as_seen()
-    assert Status.PENDING._seen == True  # ✅ Pass
-
-def test_fresh_status():
-    # This test runs after the first one
-    assert not hasattr(Status.PENDING, '_seen')  # ❌ Fail!
-    # Status.PENDING still has _seen=True from previous test!
+def test_set_comparison_mode():
+    Month.ADAR_I.set_comparison_mode(ComparisonMode.ADAR_IS_ADAR_I)
+    ...
 ```
 
 </div>
+<div data-marpit-fragment="1">
 
-<div data-marpit-fragment="2">
-
-**The lesson:** Tests started failing randomly depending on execution order! 🎲
+```python --no-line-number
+def test_compare():
+    assert HebrewDate(5785, Months.ADAR_I, 4) \ 
+        != HebrewDate(5785, Months.ADAR, 4)
+```
 
 </div>
 
 ---
 
-# Pitfall #3: Complex inheritance gone wrong
-
-<div data-marpit-fragment="1">
+# Pitfall #2: Complex inheritance gone wrong
 
 ```python --no-line-number
 class BaseConfig(Enum):
+
     def validate(self):
-        # Complex validation logic here
+        # Validation logic here - makes sense
         pass
 
-class DatabaseConfig(BaseConfig):  # 😱 This gets complicated fast
-    MYSQL = "mysql://localhost"
-    POSTGRES = "postgres://localhost"
-    
-    def connect(self):
-        # Database connection logic
-        # But what if validation fails?
-        # How do you handle different DB types?
-        # Suddenly your enum is doing too much!
-```
+class ProductConfig(BaseConfig):  # 😱 This gets complicated fast
 
-</div>
+    # Be careful‼️
+    # If you need a singleton maybe you ought to create it explicitly
+
+    def update_state(self):
+        pass
+```
 
 <div data-marpit-fragment="2">
 
-**Better approach:** Keep enums simple, use composition instead of complex inheritance
+**Better approach:** Keep enums simple, use _composition_ instead of complex inheritance
 
 </div>
 
