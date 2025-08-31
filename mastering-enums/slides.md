@@ -51,16 +51,17 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 Two development stories ...
 </div>
 
-* 📅 The hdate library
+* 📅 The hdate library (with real examples)
 * 💻 An internal Intel library (with all the secret sauce taken out 😉)
 
 <div data-marpit-fragment="2">
-... in 3 parts
-</div>
 
-* How Enums improved our code
-* Cool tricks
-* 🍕 The late night debugging of our own stupidity
+about ...
+
+- 🪄 How Enums improved our code (with some cool tricks)
+- 🍕 The late night debugging of our own stupidity
+
+</div>
 
 ---
 
@@ -70,44 +71,29 @@ Two development stories ...
 
 ---
 
-# This month shall the start of the months
+# This month shall mark for you the beginning of the months (Exodus 12:2)
 
-The hdate library started off as a python port of some C-code back in April 2016.
+🟢 The hdate library started off as a Python port of some C-code back in April 2016.
 
 <div data-marpit-fragment="1">
 
 ```python --no-line-number
 >>> from datetime import date
 
->>> today = HDate(date.today())
+>>> today = HDate(date(2016, 4, 26))
 >>> today.get_hebrew_date()
-(2, 11, 5785)  # 2nd of Av, 5785
+(10, 1, 5776)
 ```
 
 </div>
 
----
+<div data-marpit-fragment="2">
 
-# So what month are we in?
-
-<div data-marpit-fragment="1">
-
-Using numbers is not very user friendly to the user
-
-</div>
-
-<div data-marpit-fragment="1">
+💡 Using numbers is not very user friendly to the user
 
 ```python --no-line-number
-MONTH_TABLE = {"english": ["Tishrei", "Cheshvan", ...]}
-
-class HDate:
-
-    def __str__(self):
-        return hebrew_date_str(day, month, year, language="hebrew")
-
-def hebrew_date_str(day, month, year, language):
-    month_str = MONTH_TABLE[language][month]
+>>> str(today)
+"Monday 10 Nissan 5776"
 ```
 
 </div>
@@ -122,9 +108,9 @@ Guess what the following does?
 
 ```python --no-line-number
     if date.month == 13:
-        month = 6
+        month = 12
     if date.month == 14:
-        month = 6
+        month = 12
         day += 30
 ```
 
@@ -138,19 +124,15 @@ A snippet from our tests codebase from 6 years ago
 
 ```python --no-line-number
 @pytest.mark.parametrize(("date", "holiday"), [
-    ((21, 7), "pesach_vii"),
-    ((6, 9), "shavuot"),
-    ((25, 3), "chanukah"),
+    ((21, 1), "pesach_vii"),
+    ((6, 3), "shavuot"),
+    ((25, 9), "chanukah"),
 ])
 def test_holidays(date, holiday):
     ...
 ```
 
-<div data-marpit-fragment="2">
-
 Not really friendly when debugging. 😩
-
-</div>
 
 ---
 
@@ -202,9 +184,7 @@ ValueError: 15 is not a valid Months
 
 ---
 
-# Iterating over dates
-
-<div data-marpit-fragment="1">
+# Incrementing dates
 
 🎯 Our goal:
 
@@ -214,44 +194,25 @@ HebrewDate(5785, Months.AV, 7) + timedelta(days=35)
 
 ```
 
-</div>
-
-<div data-marpit-fragment="2">
-
-📃 Requirements:
-
-- Get the months length
-- Get the next month
-
-</div>
-
 ---
 
-# Enums are iterable
+```python highlight:6,14
+def __add__(self, other: timedelta):
+    _year, _month, _day = self.year, self.month, self.day
+    days_remaining = other.days
+    
+    while days_remaining > 0:
+        days_left_in_month = get_month_length(_month, _year) - ...
 
-<div data-marpit-fragment="1">
-
-```python --no-line-number
->>> [x.name for x in Months]
-[TISHREI, CHESHVAN, ...]
-```
-
-</div>
-
-<div data-marpit-fragment="2">
-But how to deal with leap years? 🤔
-
-```python --no-line-number
-[..., SHVAT, ADAR, ADAR_I, ADAR_II, NISSAN, ...]
-```
-
-</div>
-
-<div data-marpit-fragment="3">
-Or next year? 🍏🍯
-
-```python --no-line-number
-[..., AV, ELUL]
+        if days_remaining < days_left_in_month:
+        else:
+            
+            if _month == Months.ELUL:
+                ...
+            else:
+                _month = get_next_month(_month, _year)
+    
+    return HebrewDate(_year, _month, _day)
 ```
 
 </div>
@@ -272,10 +233,6 @@ class Months(Enum):
         if is_leap_year(year) and self == Months.SHVAT:
             return Months.ADAR_I
         return Months(self._value_ + 1)
-
-# Usage
-print(Months.ELUL.next_month())        # TISHREI
-print(Months.SHVAT.next_month(5784))   # ADAR_I
 ```
 
 ---
@@ -300,7 +257,7 @@ print(Months.TEVET.value)         # 4
 
 ---
 
-# ... which can be dynamic
+# ... which can be dynamic 🏃🏻
 
 ```python
 class Months(Enum):
@@ -318,75 +275,92 @@ class Months(Enum):
 
 # Part II - Creating Enums dynamically
 
-## Or "What happens when your enum values come from a config file? 🤔"
-
 ---
 
-# The Intel story: Configuration nightmare 😱
+# The Intel story: multi-product configurations
 
 <div data-marpit-fragment="1">
 
-We had YAML configs with product-specific settings:
+Project configuration:
 
-```yaml
-# feature_config.yaml
-features:
-  - name: "turbo_boost"
-    enabled: true
-    valid_for: ["SERVER", "CLIENT"]  # Only some products
-  
-  - name: "power_saving"
-    enabled: false
-    valid_for: ["MOBILE"]
-    
-  - name: "debug_mode"
-    enabled: true
-    # No valid_for = applies to all products
-```
-
-</div>
-
-<div data-marpit-fragment="2">
-
-```python
-@dataclass
-class FeatureConfig:
-    name: str
-    enabled: bool
-    valid_for: List[str] = field(default_factory=list)  # Empty = all products
+```yaml --no-line-number
+product_mapping:
+  - SERVER: server_process_x
+  - CLIENT: client_process_y, client_process_z
 ```
 
 </div>
 
 ---
 
-# The problem: Runtime configuration chaos
+# YAML config with product-specific settings
+
+<div data-marpit-fragment="1">
+
+```yaml
+- name: "feature_a"
+  enabled: true
+  products: ["CLIENT"] # All client products
+
+- name: "feature_b"
+  enabled: false
+  products: ["server_process_x"] # Only a specific SERVER product
+  
+- name: "debug_mode"
+  enabled: true
+  # No products = applies to all products
+```
+
+</div>
+
+---
+
+# ... mapped at runtime to a dataclass
 
 <div data-marpit-fragment="1">
 
 ```python --no-line-number
-def apply_feature(feature_config, current_product):
-    if feature_config.valid_for:
-        if current_product in feature_config.valid_for:
-            return enable_feature(feature_config.name)
-        return None
-    return enable_feature(feature_config.name)  # Valid for all
-
-# But what if YAML contains typos?
-# valid_for: ["SEVER", "CLIENT"]  # 😱 Typo! SEVER != SERVER
+@dataclass
+class FeatureConfig:
+    name: str
+    enabled: bool
+    products: list[str] = field(default_factory=list)
 ```
 
 </div>
 
+---
+
+# Manually resolve product groups
+
 <div data-marpit-fragment="2">
 
-**Problems:**
+```python --no-line-number
+def get_products_for_feature(feature_config, all_products):
+    """Determine which actual products a feature applies to."""
 
-- 🐛 YAML typos cause silent failures
-- ❓ No validation of product names at config load time  
-- 🔧 Features silently ignored for "invalid" products
+    if not feature_config.products:
+        return [p for p_list in all_products.values() for p in p_list]
+    
+    applicable_products = []
+
+    for product_name in feature_config.products:
+        if product_name in all_product.keys(): # Check if product is a group name
+            applicable_products.extend([p for p in all_products[product_name]])
+        applicable_products.extend(product_name)
+    
+    return applicable_products
+```
 
 </div>
+
+---
+
+# Problems
+
+- 🐛 YAML typos cause silent failures (`SEVER` != `SERVER`)
+- ❓ No validation of product names at config load time  
+- 🔧 Features silently ignored for "invalid" products
 
 ---
 
