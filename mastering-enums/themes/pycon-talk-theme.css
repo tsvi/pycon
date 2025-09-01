@@ -184,6 +184,22 @@ pre .highlighted-line > span:not([data-marp-line-number]) {
   margin: 1rem 0;
 }
 
+/* Two-column layout for comparison slides */
+.column-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+/* Styling for DO/DON'T headers */
+.do-heading {
+  color: var(--color-secondary);
+}
+
+.dont-heading {
+  color: var(--color-tertiary);
+}
+
 /* Footer for each slide */
 footer {
   font-size: 0.8rem;

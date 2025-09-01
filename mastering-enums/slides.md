@@ -448,89 +448,66 @@ class ProductConfig(BaseConfig):  # 😱 This gets complicated fast
 
 ---
 
-# When to Use Enhanced Enums ✅
+# When to Use Enum attributes
 
-<div data-marpit-fragment="1">
+<div class="column-layout">
 
-**DO use enums with methods/attributes when:**
+<div> <!-- Left column -->
+<h3 class="do-heading">✅ DO use attributes:</h3>
 
-- The behavior belongs to the enum member (like `month.days()`)
-- The data is constant and well-defined (like month lengths)  
-- You need a closed set of related constants with behavior
+- Behavior belongs to enum member
+- Data is constant and well-defined
 
-```python --no-line-number
-class HttpStatus(Enum):
-    OK = 200
-    NOT_FOUND = 404
-    
-    def is_success(self):
-        return 200 <= self.value < 300  # ✅ Behavior belongs to status
-```
+Examples:
 
+- Pre-defined values (length, position)
+
+</div>
+
+<div> <!-- Right column -->
+<h3 class="dont-heading">❌ DON'T use enum attributes:</h3>
+
+- Attribute state will be modified during runtime
+- Behavior dependent on context
+
+Examples:
+
+- Storing preferences
+- Tracking state
+
+</div>
 </div>
 
 ---
 
-# When NOT to Use Enhanced Enums ❌
+# When to Use Dynamic Enums
 
-<div data-marpit-fragment="1">
+<div class="column-layout">
 
-**DON'T use enums when:**
+<div> <!-- Left column -->
+<h3 class="do-heading">✅ Perfect for:</h3>
 
-- You need to modify state during runtime (use regular classes)
-- The behavior depends on external context (pass context as parameters)
-- You have complex inheritance needs (composition > inheritance)
+- Config that varies between runs
+- External data sources
 
-```python --no-line-number
-class UserStatus(Enum):
-    ACTIVE = "active"
-    
-    def set_last_login(self, timestamp):  # 😱 BAD! 
-        self.last_login = timestamp  # Modifies singleton state
-```
+Examples:
+
+- Product SKUs from files
+- API endpoints (dev/staging/prod)
 
 </div>
 
----
+<div> <!-- Right column -->
+<h3 class="dont-heading">❌ Not suitable for:</h3>
 
-# When to Use Dynamic Enums ✅
+- Values changing during execution
+- Highly nested configuration
 
-<div data-marpit-fragment="1">
+Examples:
 
-**Perfect for:**
-
-- Configuration that changes between deployments/projects
-- API endpoints that vary by environment  
-- Product SKUs that differ by region
-- Feature flags loaded from external systems
-
-```python --no-line-number
-# Environment-specific API endpoints
-api_config = {"DEV": "dev.api.com", "PROD": "api.com"}
-ApiEndpoints = StrEnum("ApiEndpoints", api_config)  # ✅ Good!
-```
+- Runtime feature toggles that can be switched
 
 </div>
-
----
-
-# When NOT to Use Dynamic Enums ❌
-
-<div data-marpit-fragment="1">
-
-**Not suitable for:**
-
-- Values that change during program execution
-- Data that needs complex validation logic
-- Highly nested or structured configuration
-
-```python --no-line-number
-# User preferences that change during runtime
-user_prefs = {"theme": "dark", "language": "en"}
-UserPrefs = StrEnum("UserPrefs", user_prefs)  # 😱 BAD!
-# What happens when user changes theme to "light"?
-```
-
 </div>
 
 ---
@@ -558,15 +535,15 @@ Enums should make your code more readable, not less!
 
 # Thank you
 
-<div style="display: flex; align-items: center; justify-content: center;">
+<div class="column-layout">
 
-<div style="text-align: center; margin-right: 75px; margin-top: 75px;">
+<div style="text-align: center; margin-right: 25px; margin-top: 50px;">
 <img src="assets/linkedin-qr.png" alt="LinkedIn QR Code" style="height: 250px;
      border: 2px solid #0077b5; border-radius: 10px;">
 <br><b>LinkedIn:</b> <a href="https://linkedin.com/in/tsvim">linkedin.com/in/tsvim</a>
 </div>
 
-<div style="text-align: center; margin-left: 75px; margin-top: 75px;">
+<div style="text-align: center; margin-left: 25px; margin-top: 50px;">
 <img src="assets/github-qr.png" alt="GitHub QR Code" style="height: 250px;
      border: 2px solid #333; border-radius: 10px;">
 <br><b>GitHub:</b> <a href="https://github.com/tsvi">github.com/tsvi</a>
