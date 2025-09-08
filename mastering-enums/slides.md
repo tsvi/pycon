@@ -230,7 +230,7 @@ print(Months.TEVET.value)         # 4
 
 ```python
 class Months(Enum):
-    MARCHESHVAN = 2, lambda year: 30 if long_cheshvan(year) else 29
+    CHESHVAN = 2, lambda year: 30 if long_cheshvan(year) else 29
     KISLEV = 3, lambda year: 30 if not short_kislev(year) else 29
 
     def length(self, year = None):
@@ -238,6 +238,8 @@ class Months(Enum):
         if callable(self._length):
             return self._length(year)
         return self._length
+
+print(Months.CHESHVAN.length(5786))  # 29
 ```
 
 ---
@@ -300,17 +302,21 @@ ProcessConfig = StrEnum("ProcessConfig", mapping)
 # A more streamlined approach
 
 <div data-marpit-fragment="1">
+
 ⭐ Automatic validation of process names
+
+```python --no-line-number
+>>> process = ProcessConfig("process_z")
+ValueError: 'process_z' is not a valid ProcessConfig
+```
+
 </div>
 
 <div data-marpit-fragment="2">
-⭐ No need to change YAML configuration in multiple locations
-</div>
-</br>
-<div data-marpit-fragment="3">
 
-```python --no-line-number --title:"🤩 Bonus: type-safety throughout our code"
+⭐ Type-safety throughout our code
 
+```python --no-line-number
 @dataclass
 class Features:
 
