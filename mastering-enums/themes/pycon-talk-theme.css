@@ -200,6 +200,23 @@ pre .highlighted-line > span:not([data-marp-line-number]) {
   color: var(--color-tertiary);
 }
 
+/* Dramatic OOPS overlay for highlighting pitfalls */
+.oops-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  font-size: 5em;
+  font-weight: bold;
+  color: red;
+  text-shadow: 3px 3px 0 #000;
+  border: 5px solid red;
+  padding: 10px 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
 /* Footer for each slide */
 footer {
   font-size: 0.8rem;

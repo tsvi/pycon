@@ -26,11 +26,11 @@ Tsvi Mostovicz, Intel | Pycon IL 2025 | Cinema City Glilot, Israel
 </div>
 
 <div class="bio-item" data-marpit-fragment="2">
-<img src="assets/home-assistant.png" alt="Home Assistant">
+<img src="assets/jewish-calendar.png" alt="Jewish Calendar App">
 </div>
 
 <div class="bio-item" data-marpit-fragment="3">
-<img src="assets/jewish-calendar.png" alt="Jewish Calendar App">
+<img src="assets/home-assistant.png" alt="Home Assistant">
 </div>
 
 <div class="bio-item" data-marpit-fragment="4">
@@ -140,8 +140,6 @@ Not really friendly when debugging. 😩
 
 A month is literally an enumerated type
 
-<div data-marpit-fragment="1">
-
 ```python --no-line-number
 class Months(Enum):
 
@@ -150,33 +148,6 @@ class Months(Enum):
     KISLEV = auto()
     TEVET = auto()
 ```
-
-</div>
-
----
-
-# And we get free goodies 🍺
-
-<div data-marpit-fragment="1">
-
-Validation ...
-
-```python --no-line-number
->>> month = Months(15)
-ValueError: 15 is not a valid Months
-```
-
-</div>
-
-<div data-marpit-fragment="2">
-... and introspection 🎉
-
-```python --no-line-number
->>> [x.name for x in Months]
-[TISHREI, CHESHVAN, ...]
-```
-
-</div>
 
 ---
 
@@ -356,93 +327,69 @@ class Features:
 
 ---
 
-# Pitfall #1: Changing an Enums attribute affects ALL instances of that Enum's attribute!
+# Example #1: Setting the language
+
+<div data-marpit-fragment="1">
+
+```python --no-line-number
+>>> today = HebrewDate(5785, Months.ELUL, 7)
+>>> today.set_language("he")
+>>> str(today)
+'ז אלול תשפ"ה'
+```
+
+</div>
+
+<div data-marpit-fragment="2">
+
+```python --no-line-number
+>>> tomorrow = HebrewDate(5785, Months.ELUL, 8)
+>>> assert tomorrow - today == timdelta(days=1)
+True
+```
+
+</div>
+<div data-marpit-fragment="3">
+
+```python --no-line-number
+>>> str(today)
+'תשפ"ה Elul ח'  # WAIT... Why did the month change to English??
+```
+
+</div>
+
+<div data-marpit-fragment="4" class="oops-overlay">
+OOPS!
+</div>
 
 ---
 
-# Example #1: setting the language
+# Enums are singletons 🙀
 
-```python
-@dataclass
-class HebrewDate:
-
-    _language: str = "en"
-
-    def __post_init__(self, ...):
-        self.month.set_language(self._language)
-
-today = HebrewDate(5785, Months.ELUL, 7)
-today.set_language("he") # -> ז אלול תשפ"ה
-
-# Forgot to set the language? Tomorrow's month is also in Hebrew
-tomorrow = HebrewDate(5785, Months.ELUL, 8)
-```
+The language attribute of `Months` has been reset when `tomorrow` was created.
 
 ---
 
 # Example #2: Test pollution
 
-```python --no-line-number
-class ComparisonMode(Enum):
-
-    STRICT = auto()
-    ADAR_IS_ADAR_I = auto()
-    ADAR_IS_ADAR_II = auto()
-    ADAR_IS_ANY = auto()
-    
-class Months(Enum):
-
-    def set_comparison_mode(self):
-        ...
-```
-
----
-
-# Tests randomly fail (dependant on execution order)
-
 <div data-marpit-fragment="1">
 
-```python --no-line-number
+Sometimes we want "different" Adar's to be considered the same.
 
+```python --no-line-number
 def test_set_comparison_mode():
-    Month.ADAR_I.set_comparison_mode(ComparisonMode.ADAR_IS_ADAR_I)
-    ...
+    Months.ADAR.set_comparison_mode(ComparisonMode.ADAR_IS_ADAR_I)
+    assert Months.ADAR == Months.ADAR_I
 ```
 
 </div>
-<div data-marpit-fragment="1">
+<div data-marpit-fragment="2">
 
 ```python --no-line-number
 def test_compare():
     assert HebrewDate(5785, Months.ADAR_I, 4) \ 
         != HebrewDate(5785, Months.ADAR, 4)
 ```
-
-</div>
-
----
-
-# Pitfall #2: Complex inheritance gone wrong
-
-```python --no-line-number
-class BaseConfig(Enum):
-
-    def validate(self):
-        # Validation logic here - makes sense
-        pass
-
-class ProductConfig(BaseConfig):  # 😱 This gets complicated fast
-
-    # Be careful‼️
-    # If you need a singleton maybe you ought to create it explicitly
-
-    def update_state(self):
-        pass
-```
-
-<div data-marpit-fragment="2">
-
-**Better approach:** Keep enums simple, use _composition_ instead of complex inheritance
 
 </div>
 
@@ -465,7 +412,7 @@ Examples:
 </div>
 
 <div> <!-- Right column -->
-<h3 class="dont-heading">❌ DON'T use enum attributes:</h3>
+<h3 class="dont-heading">❌ DON'T use attributes:</h3>
 
 - Attribute state will be modified during runtime
 - Behavior dependent on context
@@ -501,7 +448,6 @@ Examples:
 <h3 class="dont-heading">❌ Not suitable for:</h3>
 
 - Values changing during execution
-- Highly nested configuration
 
 Examples:
 
@@ -519,7 +465,7 @@ Examples:
 
 </div>
 
-<div data-marpit-fragment="1" style="margin-top: 1em;">
+<div style="margin-top: 1em;">
 Enums should make your code more readable, not less!
 </div>
 
